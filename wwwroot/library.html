@@ -1,0 +1,1022 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Библиотека</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+            margin-bottom: 28px;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+            align-items: center;
+        }
+
+        .search-wrap {
+            flex: 1;
+            position: relative;
+        }
+
+            .search-wrap svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                color: #aaa;
+            }
+
+            .search-wrap input {
+                width: 100%;
+                padding: 10px 14px 10px 38px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 9px;
+                font-size: 14px;
+                outline: none;
+                background: #fff;
+                transition: border-color 0.2s;
+            }
+
+                .search-wrap input:focus {
+                    border-color: #111;
+                }
+
+        .btn-upload {
+            padding: 10px 20px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+
+            .btn-upload:hover {
+                background: #333;
+            }
+
+        /* CONTENT AREA */
+        .content-area {
+            display: flex;
+            gap: 24px;
+        }
+
+        /* CARDS */
+        .books-section {
+            flex: 1;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px;
+            border: 1.5px solid #e8e8e8;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.15s;
+            position: relative;
+        }
+
+            .card:hover {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+                transform: translateY(-2px);
+            }
+
+        .card-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tag-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .tag-approved {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .card-type {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .card-meta {
+            font-size: 12.5px;
+            color: #777;
+            line-height: 1.8;
+        }
+
+            .card-meta span {
+                display: block;
+            }
+
+        /* FILTERS */
+        .filters-panel {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .filter-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            border: 1.5px solid #e8e8e8;
+            margin-bottom: 16px;
+        }
+
+        .filter-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .filter-select-wrap {
+            position: relative;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+            transition: border-color 0.2s;
+        }
+
+            .filter-input:focus {
+                border-color: #111;
+            }
+
+        .filter-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+            .filter-dropdown.open {
+                display: block;
+            }
+
+        .filter-option {
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+            .filter-option:hover {
+                background: #f5f5f5;
+            }
+
+            .filter-option.selected {
+                background: #111;
+                color: #fff;
+            }
+
+        .filter-clear {
+            font-size: 12px;
+            color: #aaa;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+            .filter-clear:hover {
+                color: #111;
+            }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+
+            .modal-close:hover {
+                color: #111;
+            }
+
+        .modal-tag {
+            margin-bottom: 12px;
+        }
+
+        .modal-type {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        .modal-meta {
+            font-size: 13.5px;
+            color: #555;
+            line-height: 2;
+            margin-bottom: 20px;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 16px;
+        }
+
+            .modal-meta span {
+                display: block;
+            }
+
+        .modal-desc-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .btn-download {
+            width: 100%;
+            padding: 13px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-download:hover {
+                background: #333;
+            }
+
+        /* UPLOAD MODAL */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                width: 100%;
+                padding: 9px 12px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+                transition: border-color 0.2s;
+            }
+
+                .form-group input:focus,
+                .form-group textarea:focus,
+                .form-group select:focus {
+                    border-color: #111;
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        .tag-new {
+            background: #cfe2ff;
+            color: #084298;
+        }
+        .btn-delete {
+            width: 100%;
+            padding: 13px;
+            background: #fff;
+            color: #e53935;
+            border: 1.5px solid #e53935;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.15s;
+        }
+
+            .btn-delete:hover {
+                background: #fff5f5;
+            }
+        .tag-rejected {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .btn-favorite {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .btn-favorite:hover {
+                border-color: #111;
+                color: #111;
+            }
+
+            .btn-favorite.favorited {
+                background: #111;
+                color: #fff;
+                border-color: #111;
+            }
+
+            .btn-favorite svg {
+                width: 14px;
+                height: 14px;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="page-title">Библиотека</div>
+        <div class="page-subtitle">Учебные материалы, лекции и пособия.</div>
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="search-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                <input type="text" id="searchInput" placeholder="Поиск по названию или автору..." oninput="filterBooks()" />
+            </div>
+            <button class="btn-upload" onclick="openUploadModal()">+ Добавить</button>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content-area">
+            <!-- CARDS -->
+            <div class="books-section">
+                <div class="cards-grid" id="cardsGrid">
+                    <div class="empty-state">Загрузка...</div>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters-panel">
+                <div class="filter-box">
+                    <div class="filter-title">Тип документа</div>
+                    <div class="filter-select-wrap">
+                        <input class="filter-input" id="typeFilterInput" placeholder="Все типы" oninput="filterDropdown('type')" onfocus="openDropdown('type')" autocomplete="off" />
+                        <div class="filter-dropdown" id="typeDropdown"></div>
+                    </div>
+                    <span class="filter-clear" onclick="clearFilter('type')">Сбросить</span>
+                </div>
+
+                <div class="filter-box">
+                    <div class="filter-title">Предмет</div>
+                    <div class="filter-select-wrap">
+                        <input class="filter-input" id="subjectFilterInput" placeholder="Все предметы" oninput="filterDropdown('subject')" onfocus="openDropdown('subject')" autocomplete="off" />
+                        <div class="filter-dropdown" id="subjectDropdown"></div>
+                    </div>
+                    <span class="filter-clear" onclick="clearFilter('subject')">Сбросить</span>
+                </div>
+
+                <div class="filter-box">
+                    <div class="filter-title">Показать</div>
+                    <button class="filter-tab" id="showAll" onclick="setShowMode('all')" style="width:100%;margin-bottom:8px;padding:9px;border-radius:8px;border:1.5px solid #e0e0e0;background:#111;color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Все документы</button>
+                    <button class="filter-tab" id="showFav" onclick="setShowMode('favorites')" style="width:100%;padding:9px;border-radius:8px;border:1.5px solid #e0e0e0;background:#fff;color:#555;font-size:13px;font-weight:600;cursor:pointer;">Избранное</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('detailModal')">×</button>
+            <div class="modal-tag" id="modalTag"></div>
+            <div class="modal-type" id="modalType"></div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-meta" id="modalMeta"></div>
+            <div class="modal-desc-title">ОПИСАНИЕ</div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <button class="btn-download" id="modalDownloadBtn">Скачать</button>
+            <button class="btn-favorite" id="modalFavBtn" style="width:100%;justify-content:center;margin-top:8px;padding:13px;">В избранное</button>
+            <button class="btn-download" id="modalEditBtn" style="display:none; margin-top:8px;">Редактировать и переотправить</button>
+            <button class="btn-delete" id="modalDeleteBtn" style="display:none;">Удалить из библиотеки</button>
+        </div>
+    </div>
+
+    <!-- UPLOAD MODAL -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('uploadModal')">×</button>
+            <div class="modal-title" style="margin-bottom:20px">Добавить документ</div>
+
+            <div class="form-group">
+                <label>Название *</label>
+                <input type="text" id="upTitle" placeholder="Введите название" />
+            </div>
+            <div class="form-group">
+                <label>Автор *</label>
+                <input type="text" id="upAuthor" placeholder="ФИО автора" />
+            </div>
+            <div class="form-group">
+                <label>Издательство / Кафедра</label>
+                <input type="text" id="upPublisher" placeholder="Например: Кафедра математики" />
+            </div>
+            <div class="form-group">
+                <label>Тип документа *</label>
+                <select id="upDocType">
+                    <option value="">— Выберите —</option>
+                    <option>Книга</option>
+                    <option>Методическое пособие</option>
+                    <option>Силлабус</option>
+                    <option>Реферат</option>
+                    <option>Научная статья</option>
+                    <option>Семестровая работа</option>
+                    <option>Дипломная работа</option>
+                    <option>Монография</option>
+                    <option>Диссертация</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Предмет</label>
+                <div class="filter-select-wrap">
+                    <input class="filter-input" id="upSubject" placeholder="Начните вводить предмет..."
+                           oninput="filterUploadSubject()" onfocus="openUploadSubjectDropdown()" autocomplete="off" />
+                    <div class="filter-dropdown" id="upSubjectDropdown"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Краткое описание</label>
+                <textarea id="upDesc" placeholder="О чём этот документ..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Файл *</label>
+                <input type="file" id="upFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
+                <div style="font-size:11px;color:#aaa;margin-top:5px;">Допустимые форматы: PDF, Word (.doc, .docx), PowerPoint (.ppt, .pptx), Excel (.xls, .xlsx)</div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#555;cursor:pointer;line-height:1.5;">
+                    <input type="checkbox" id="checkResponsibility" style="margin-top:2px;flex-shrink:0;" />
+                    Я подтверждаю, что загружаемый материал является полезным и соответствует тематике платформы. Я несу ответственность за его содержание.
+                </label>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#555;cursor:pointer;line-height:1.5;">
+                    <input type="checkbox" id="checkCopyright" style="margin-top:2px;flex-shrink:0;" />
+                    Я подтверждаю, что данный материал найден в открытых источниках, приобретён мной, либо я являюсь его автором.
+                </label>
+            </div>
+            <button class="btn-download" onclick="submitUpload()">Отправить на модерацию</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('editModal')">×</button>
+            <div class="modal-title" style="margin-bottom:20px">Редактировать документ</div>
+            <input type="hidden" id="editId" />
+            <div class="form-group">
+                <label>Название *</label>
+                <input type="text" id="editTitle" />
+            </div>
+            <div class="form-group">
+                <label>Автор *</label>
+                <input type="text" id="editAuthor" />
+            </div>
+            <div class="form-group">
+                <label>Издательство / Кафедра</label>
+                <input type="text" id="editPublisher" />
+            </div>
+            <div class="form-group">
+                <label>Тип документа *</label>
+                <select id="editDocType">
+                    <option value="">— Выберите —</option>
+                    <option>Книга</option>
+                    <option>Методическое пособие</option>
+                    <option>Силлабус</option>
+                    <option>Реферат</option>
+                    <option>Научная статья</option>
+                    <option>Семестровая работа</option>
+                    <option>Дипломная работа</option>
+                    <option>Монография</option>
+                    <option>Диссертация</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Предмет</label>
+                <input type="text" id="editSubject" />
+            </div>
+            <div class="form-group">
+                <label>Описание</label>
+                <textarea id="editDesc"></textarea>
+            </div>
+            <button class="btn-download" onclick="submitEdit()">Переотправить на модерацию</button>
+        </div>
+    </div>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const role = localStorage.getItem('userRole') || 'student';
+        const userName = localStorage.getItem('userName') || '';
+        const userSurname = localStorage.getItem('userSurname') || '';
+        const userId = localStorage.getItem('userId') || null;
+
+        const docTypes = [
+            'Книга', 'Методическое пособие', 'Силлабус', 'Реферат',
+            'Научная статья', 'Семестровая работа', 'Дипломная работа',
+            'Монография', 'Диссертация'
+        ];
+
+        const subjects = [
+            'Высшая математика', 'Физика', 'Химия', 'Информатика',
+            'История', 'Философия', 'Экономика', 'Право', 'Психология',
+            'Иностранный язык', 'Базы данных', 'Программирование',
+            'Сети и телекоммуникации', 'Менеджмент', 'Статистика'
+        ];
+
+        let allBooks = [];
+        let selectedType = '';
+        let selectedSubject = '';
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSidebar('library');
+        });
+
+        function getRoleLabel(r) {
+            return { student: 'Студент', teacher: 'Учитель', moderator: 'Модератор', admin: 'Администратор' }[r] || r;
+        }
+
+        // Загрузка книг
+        async function loadBooks() {
+            const res = await fetch(`${API}/library?userId=${userId || ''}`);
+            allBooks = await res.json();
+            renderBooks(allBooks);
+            buildDropdown('type', docTypes);
+            buildDropdown('subject', subjects);
+        }
+
+        function renderBooks(books) {
+            const grid = document.getElementById('cardsGrid');
+            if (books.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Документов не найдено</div>';
+                return;
+            }
+            grid.innerHTML = books.map(b => `
+                <div class="card" onclick="openDetail(${b.id})">
+                  ${b.status === 'rejected' ? '<span class="card-tag tag-rejected">Отклонено</span>' : !b.approved ? '<span class="card-tag tag-pending">На рассмотрении</span>' : isNew(b.createdAt) ? '<span class="card-tag tag-new">Недавно добавлено</span>' : ''}
+                  <div class="card-type">${b.documentType || 'Документ'}</div>
+                  <div class="card-title">${b.title}</div>
+                  <div class="card-meta">
+                    <span>Автор: ${b.author}</span>
+                    <span>Предмет: ${b.subject || '—'}</span>
+                    <span>Опубликовал: ${b.uploaderName || '—'} ${b.uploaderRole ? '(' + getRoleLabel(b.uploaderRole) + ')' : ''}</span>
+                  </div>
+                </div>
+              `).join('');
+        }
+
+        function filterBooks() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allBooks.filter(b => {
+                const matchSearch = b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+                const matchType = !selectedType || b.documentType === selectedType;
+                const matchSubject = !selectedSubject || b.subject === selectedSubject;
+                return matchSearch && matchType && matchSubject;
+            });
+            renderBooks(filtered);
+        }
+
+        // Детальное окно
+        function openDetail(id) {
+            const b = allBooks.find(x => x.id === id);
+            if (!b) return;
+
+            document.getElementById('modalTag').innerHTML =
+                b.status === 'rejected'
+                    ? '<span class="card-tag tag-rejected">Отклонено</span>'
+                    : !b.approved
+                        ? '<span class="card-tag tag-pending">На рассмотрении</span>'
+                        : isNew(b.createdAt) ? '<span class="card-tag tag-new">Недавно добавлено</span>' : '';
+            document.getElementById('modalType').textContent = b.documentType || 'Документ';
+            document.getElementById('modalTitle').textContent = b.title;
+            document.getElementById('modalMeta').innerHTML = `
+                <span>Автор: <strong>${b.author}</strong></span>
+                <span>Предмет: <strong>${b.subject || '—'}</strong></span>
+                <span>Издательство / Кафедра: <strong>${b.publisher || '—'}</strong></span>
+                <span>Опубликовал: <strong>${b.uploaderName || '—'} ${b.uploaderRole ? '(' + getRoleLabel(b.uploaderRole) + ')' : ''}</strong></span>
+                ${(role === 'moderator' || role === 'admin') ? `<span>Одобрил: <strong>${b.approvedByName || '—'}</strong></span>` : ''}
+                <span>Дата: <strong>${new Date(b.createdAt).toLocaleDateString('ru-RU')}</strong></span>
+                ${b.status === 'rejected' && b.rejectReason ? `<span style="color:#842029;margin-top:8px;display:block">Причина отклонения: <strong>${b.rejectReason}</strong></span>` : ''}
+                `;
+            document.getElementById('modalDesc').textContent = b.description || 'Описание не указано.';
+            document.getElementById('modalDownloadBtn').onclick = () => downloadBook(id, b.title, b.approved);
+            document.getElementById('modalFavBtn').className = 'btn-favorite' + (b.isFavorited ? ' favorited' : '');
+            document.getElementById('modalFavBtn').innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="${b.isFavorited ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                ${b.isFavorited ? 'В избранном' : 'В избранное'}
+                `;
+            document.getElementById('modalFavBtn').onclick = () => toggleFavorite(id, b);
+
+            const deleteBtn = document.getElementById('modalDeleteBtn');
+            const editBtn = document.getElementById('modalEditBtn');
+
+            if (role === 'moderator' || role === 'admin') {
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => deleteBook(id);
+                editBtn.style.display = 'none';
+            } else if (b.status === 'rejected') {
+                deleteBtn.style.display = 'block';
+                deleteBtn.onclick = () => deleteBook(id);
+                editBtn.style.display = 'block';
+                editBtn.onclick = () => openEditModal(b);
+            } else {
+                deleteBtn.style.display = 'none';
+                editBtn.style.display = 'none';
+            }
+
+            document.getElementById('detailModal').classList.add('open');
+        }
+
+        async function downloadBook(id, title, approved) {
+            if (!approved) {
+                showAlert('Файл ещё на модерации.', 'warning');
+                return;
+            }
+            const res = await fetch(`${API}/library/${id}/download`);
+            if (!res.ok) { showAlert('Ошибка скачивания', 'error'); return; }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const disposition = res.headers.get('Content-Disposition');
+            let fileName = title;
+            if (disposition) {
+                const match = disposition.match(/filename\*=UTF-8''(.+)/);
+                if (match) fileName = decodeURIComponent(match[1]);
+            }
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Загрузка файла
+        function openUploadModal() {
+            document.getElementById('checkResponsibility').checked = false;
+            document.getElementById('checkCopyright').checked = false;
+            document.getElementById('uploadModal').classList.add('open');
+        }
+
+        async function submitUpload() {
+            const title = document.getElementById('upTitle').value.trim();
+            const author = document.getElementById('upAuthor').value.trim();
+            const docType = document.getElementById('upDocType').value;
+            const file = document.getElementById('upFile').files[0];
+
+            if (!title || !author || !docType || !file) {
+                showAlert('Заполните все обязательные поля и выберите файл.', 'warning');
+                return;
+            }
+            if (!document.getElementById('checkResponsibility').checked || !document.getElementById('checkCopyright').checked) {
+                showAlert('Подтвердите оба условия перед отправкой', 'warning');
+                return;
+            }
+
+            const allowed = ['.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx'];
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            if (!allowed.includes(ext)) {
+                showAlert('Допустимые форматы: PDF, Word, PowerPoint, Excel', 'warning');
+                return;
+            }
+
+            const fd = new FormData();
+            fd.append('Title', title);
+            fd.append('Author', author);
+            fd.append('Publisher', document.getElementById('upPublisher').value.trim());
+            fd.append('DocumentType', docType);
+            fd.append('Subject', document.getElementById('upSubject').value.trim());
+            fd.append('Description', document.getElementById('upDesc').value.trim());
+            fd.append('UserId', userId || '');
+            fd.append('File', file);
+
+            const res = await fetch(`${API}/library/upload`, { method: 'POST', body: fd });
+            const data = await res.json();
+            showAlert(data.message, res.ok ? 'success' : 'error');
+            closeModal('uploadModal');
+            loadBooks();
+        }
+
+        // Фильтры
+        function buildDropdown(type, items) {
+            const dd = document.getElementById(type + 'Dropdown');
+            dd.innerHTML = items.map(i => `<div class="filter-option" onclick="selectFilter('${type}','${i}')">${i}</div>`).join('');
+        }
+
+        function openDropdown(type) {
+            document.getElementById(type + 'Dropdown').classList.add('open');
+        }
+
+        function filterDropdown(type) {
+            const val = document.getElementById(type + 'FilterInput').value.toLowerCase();
+            const items = type === 'type' ? docTypes : subjects;
+            const dd = document.getElementById(type + 'Dropdown');
+            dd.innerHTML = items
+                .filter(i => i.toLowerCase().includes(val))
+                .map(i => `<div class="filter-option" onclick="selectFilter('${type}','${i}')">${i}</div>`)
+                .join('');
+            dd.classList.add('open');
+        }
+
+        function selectFilter(type, value) {
+            if (type === 'type') {
+                selectedType = value;
+                document.getElementById('typeFilterInput').value = value;
+                document.getElementById('typeDropdown').classList.remove('open');
+            } else {
+                selectedSubject = value;
+                document.getElementById('subjectFilterInput').value = value;
+                document.getElementById('subjectDropdown').classList.remove('open');
+            }
+            filterBooks();
+        }
+
+        function clearFilter(type) {
+            if (type === 'type') {
+                selectedType = '';
+                document.getElementById('typeFilterInput').value = '';
+            } else {
+                selectedSubject = '';
+                document.getElementById('subjectFilterInput').value = '';
+            }
+            filterBooks();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.filter-select-wrap')) {
+                document.querySelectorAll('.filter-dropdown').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        loadBooks();
+        function isNew(dateStr) {
+            const days = (Date.now() - new Date(dateStr)) / (1000 * 60 * 60 * 24);
+            return days <= 3;
+        }
+
+        //Удаление книг
+        async function deleteBook(id) {
+            showConfirm('Удалить этот документ из библиотеки?', async () => {
+                const res = await fetch(`${API}/library/${id}?userId=${userId}`, { method: 'DELETE' });
+                if (res.ok) { closeModal('detailModal'); loadBooks(); showAlert('Документ удалён', 'success'); }
+                else showAlert('Ошибка удаления', 'error');
+            });
+        }
+
+        //Поле с выбором пердмета в загрузке книги
+        function openUploadSubjectDropdown() {
+            const dd = document.getElementById('upSubjectDropdown');
+            dd.innerHTML = subjects.map(s =>
+                `<div class="filter-option" onclick="selectUploadSubject('${s}')">${s}</div>`
+            ).join('');
+            dd.classList.add('open');
+        }
+
+        function filterUploadSubject() {
+            const val = document.getElementById('upSubject').value.toLowerCase();
+            const dd = document.getElementById('upSubjectDropdown');
+            dd.innerHTML = subjects
+                .filter(s => s.toLowerCase().includes(val))
+                .map(s => `<div class="filter-option" onclick="selectUploadSubject('${s}')">${s}</div>`)
+                .join('');
+            dd.classList.add('open');
+        }
+
+        function selectUploadSubject(value) {
+            document.getElementById('upSubject').value = value;
+            document.getElementById('upSubjectDropdown').classList.remove('open');
+        }
+        // редактирование
+        function openEditModal(b) {
+            document.getElementById('editId').value = b.id;
+            document.getElementById('editTitle').value = b.title;
+            document.getElementById('editAuthor').value = b.author;
+            document.getElementById('editPublisher').value = b.publisher || '';
+            document.getElementById('editDocType').value = b.documentType || '';
+            document.getElementById('editSubject').value = b.subject || '';
+            document.getElementById('editDesc').value = b.description || '';
+            closeModal('detailModal');
+            document.getElementById('editModal').classList.add('open');
+        }
+
+        async function submitEdit() {
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('editTitle').value.trim();
+            const author = document.getElementById('editAuthor').value.trim();
+            const docType = document.getElementById('editDocType').value;
+
+            if (!title || !author || !docType) {
+                showAlert('Заполните обязательные поля', 'warning');
+                return;
+            }
+            const res = await fetch(`${API}/library/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    Title: title,
+                    Author: author,
+                    Publisher: document.getElementById('editPublisher').value,
+                    DocumentType: docType,
+                    Subject: document.getElementById('editSubject').value,
+                    Description: document.getElementById('editDesc').value
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                closeModal('editModal');
+                loadBooks();
+                showAlert(data.message, 'success');
+            } else {
+                showAlert(data.message || 'Ошибка', 'error');
+            }
+        }
+        let showMode = 'all';
+
+        async function setShowMode(mode) {
+            showMode = mode;
+            if (mode === 'all') {
+                document.getElementById('showAll').style.background = '#111';
+                document.getElementById('showAll').style.color = '#fff';
+                document.getElementById('showFav').style.background = '#fff';
+                document.getElementById('showFav').style.color = '#555';
+                filterBooks();
+            } else {
+                document.getElementById('showFav').style.background = '#111';
+                document.getElementById('showFav').style.color = '#fff';
+                document.getElementById('showAll').style.background = '#fff';
+                document.getElementById('showAll').style.color = '#555';
+                const res = await fetch(`${API}/library/favorites?userId=${userId}`);
+                const favBooks = await res.json();
+                renderBooks(favBooks);
+            }
+        }
+        async function toggleFavorite(id, b) {
+            const res = await fetch(`${API}/library/${id}/favorite?userId=${userId}`, { method: 'POST' });
+            if (!res.ok) return;
+            const data = await res.json();
+            b.isFavorited = data.favorited;
+            document.getElementById('modalFavBtn').className = 'btn-favorite' + (data.favorited ? ' favorited' : '');
+            document.getElementById('modalFavBtn').innerHTML = `
+            <svg viewBox="0 0 24 24" fill="${data.favorited ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            ${data.favorited ? 'В избранном' : 'В избранное'}
+        `;
+            loadBooks();
+        }
+    </script>
+
+</body>
+</html>

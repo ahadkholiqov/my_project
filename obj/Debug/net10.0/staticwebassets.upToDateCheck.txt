@@ -1,0 +1,29 @@
+wwwroot\admin.html
+wwwroot\announcements.html
+wwwroot\eduhub-login.html
+wwwroot\files.html
+wwwroot\ideas.html
+wwwroot\library.html
+wwwroot\moderation.html
+wwwroot\profile.html
+wwwroot\sidebar.css
+wwwroot\sidebar.js
+wwwroot\uploads\fileexchange\21b58e48-b646-4bc9-84bc-bc9b35f78bb0_1_million_passwords.xlsx
+wwwroot\uploads\fileexchange\3f2206cc-6dc5-4ef9-8586-bfccdb1f6466_EduHub_Файлообменник_Логика.docx
+wwwroot\uploads\fileexchange\620e93a8-e307-4b80-8b11-e3d9c23bea67_ДООП_народные_росписи_ПУМ_ПУМ_хэлп_1.docx
+wwwroot\uploads\fileexchange\89d03093-8f30-4abe-8f70-01d8b10960d7_Сикли 4.ФЭ.xlsx
+wwwroot\uploads\fileexchange\a162312a-8d3b-4cec-80d9-e2981bef66ab_c33.pdf
+wwwroot\uploads\fileexchange\a6054902-b8c6-43e5-8b24-1027f8467965_ДООП_народные_росписи_ПУМ_ПУМ_хэлп_1.docx
+wwwroot\uploads\fileexchange\bc47d3bd-4a34-44a2-804e-8e98d14c809c_Презентация - Портрет.pptx
+wwwroot\dashboard.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\admin.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\announcements.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\eduhub-login.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\files.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\ideas.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\library.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\moderation.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\profile.html
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\sidebar.css
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\sidebar.js
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\wwwroot\dashboard.html

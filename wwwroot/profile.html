@@ -1,0 +1,528 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Профиль</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 28px;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .profile-card-left {
+            background: #fff;
+            border-radius: 14px;
+            border: 1.5px solid #e8e8e8;
+            padding: 32px 24px 24px;
+            text-align: center;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            background: #111;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 auto 16px;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 4px;
+        }
+
+        .profile-role {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .profile-meta {
+            text-align: left;
+            border-top: 1.5px solid #f0f0f0;
+            padding-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #555;
+        }
+
+            .meta-row svg {
+                color: #aaa;
+                flex-shrink: 0;
+                width: 16px;
+                height: 16px;
+            }
+
+        .profile-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: #fff;
+            border-radius: 14px;
+            border: 1.5px solid #e8e8e8;
+            padding: 24px 28px;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .info-card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 3px;
+        }
+
+        .info-card-sub {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .btn-edit {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            white-space: nowrap;
+        }
+
+            .btn-edit:hover {
+                border-color: #aaa;
+            }
+
+        .fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field-full {
+            grid-column: 1 / -1;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .field-input {
+            width: 100%;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            color: #333;
+            background: #f9f9f9;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+            .field-input:focus {
+                border-color: #111;
+                background: #fff;
+            }
+
+            .field-input[readonly] {
+                cursor: default;
+            }
+
+                .field-input[readonly]:focus {
+                    border-color: #e8e8e8;
+                    background: #f9f9f9;
+                }
+
+        .btn-save {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: none;
+            margin-top: 16px;
+        }
+
+            .btn-save:hover {
+                background: #333;
+            }
+
+            .btn-save.visible {
+                display: inline-block;
+            }
+
+        .save-success {
+            font-size: 13px;
+            color: #1a7f45;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <div id="passwordModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:32px;width:100%;max-width:400px;position:relative;">
+            <div style="font-size:17px;font-weight:700;color:#111;margin-bottom:6px;">Смена пароля</div>
+            <div style="font-size:13px;color:#aaa;margin-bottom:24px;">Введите текущий и новый пароль.</div>
+
+            <div style="margin-bottom:14px;">
+                <div class="field-label">Текущий пароль</div>
+                <div style="position:relative;">
+                    <input class="field-input" type="password" id="oldPassword" style="padding-right:40px;" />
+                    <span onclick="toggleVis('oldPassword',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <div class="field-label">Новый пароль</div>
+                <div style="position:relative;">
+                    <input class="field-input" type="password" id="newPassword" style="padding-right:40px;" />
+                    <span onclick="toggleVis('newPassword',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                    </span>
+                </div>
+            </div>
+            <div style="margin-bottom:24px;">
+                <div class="field-label">Повторите новый пароль</div>
+                <div style="position:relative;">
+                    <input class="field-input" type="password" id="confirmPassword" style="padding-right:40px;" />
+                    <span onclick="toggleVis('confirmPassword',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#aaa;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div id="passwordError" style="display:none;color:#e53935;font-size:13px;margin-bottom:14px;"></div>
+
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button class="btn-edit" onclick="closePasswordModal()">Отмена</button>
+                <button class="btn-save visible" onclick="changePassword()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="main">
+        <div class="page-title">Профиль</div>
+        <div class="profile-layout" id="profileLayout">
+            <div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1">Загрузка...</div>
+        </div>
+    </main>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const role = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName');
+        const userSurname = localStorage.getItem('userSurname');
+        const userId = localStorage.getItem('userId');
+
+        let editMode = false;
+        let profileData = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!role) { window.location.href = 'eduhub-login.html'; return; }
+            renderSidebar('profile');
+            loadProfile();
+        });
+
+        async function loadProfile() {
+            const res = await fetch(`${API}/profile?userId=${userId}`);
+            if (!res.ok) { return; }
+            profileData = await res.json();
+            renderProfile(profileData);
+        }
+
+        function roleLabel(r) {
+            const map = { student: 'Студент', teacher: 'Учитель', moderator: 'Модератор', admin: 'Администратор' };
+            return map[r] || r;
+        }
+
+        function renderProfile(p) {
+            const fullName = [p.name, p.middlename, p.surname].filter(Boolean).join(' ');
+            const joined = p.createdAt ? new Date(p.createdAt).toLocaleDateString('ru-RU') : '—';
+
+            document.getElementById('profileLayout').innerHTML = `
+                <div class="profile-card-left">
+                  <div class="avatar-circle" style="background:${getRoleAvatarColor(p.role)}">${getRoleAvatarLabel(p.role)}</div>
+                  <div class="profile-name">${fullName}</div>
+                  <div class="profile-role">${roleLabel(p.role)}</div>
+                  <div class="profile-meta">
+                    <div class="meta-row">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                      <span>${p.email || '—'}</span>
+                    </div>
+                    <div class="meta-row">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.53 6.53l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>${p.phone || '—'}</span>
+                    </div>
+                    <div class="meta-row">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      <span>На платформе с ${joined}</span>
+                    </div>
+                    <div style="border-top:1.5px solid #f0f0f0;margin-top:16px;padding-top:16px;">
+                <button class="btn-edit" onclick="openPasswordModal()" style="width:100%;justify-content:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Сменить пароль
+                </button>
+              </div>
+                  </div>
+                </div>
+
+                <div class="profile-right">
+                  <div class="info-card">
+                    <div class="info-card-header">
+                      <div>
+                        <div class="info-card-title">Информация о пользователе</div>
+                        <div class="info-card-sub">Ваши личные данные.</div>
+                      </div>
+                      <button class="btn-edit" onclick="toggleEdit()" id="editBtn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Редактировать
+                      </button>
+                    </div>
+                    <div class="fields-grid">
+                  <div>
+                    <div class="field-label">Имя</div>
+                    <input class="field-input" value="${p.name || ''}" readonly />
+                  </div>
+                  <div>
+                    <div class="field-label">Фамилия</div>
+                    <input class="field-input" value="${p.surname || ''}" readonly />
+                  </div>
+                  <div>
+                    <div class="field-label">Отчество</div>
+                    <input class="field-input" value="${p.middlename || '—'}" readonly />
+                  </div>
+                  <div>
+                    <div class="field-label">Логин</div>
+                    <input class="field-input" value="${p.login || ''}" readonly />
+                  </div>
+                  <div>
+                    <div class="field-label">Телефон</div>
+                    <input class="field-input" id="fieldPhone" value="${p.phone || ''}" readonly />
+                  </div>
+                  <div>
+                    <div class="field-label">Email</div>
+                    <input class="field-input" id="fieldEmail" value="${p.email || ''}" readonly />
+                  </div>
+                </div>
+                    <button class="btn-save" id="saveBtn" onclick="saveProfile()">Сохранить</button>
+                </div>
+
+                   <div class="info-card">
+                    <div class="info-card-header">
+                      <div>
+                        <div class="info-card-title">Учебный процесс</div>
+                        <div class="info-card-sub">Ваша группа.</div>
+                      </div>
+                    </div>
+                    ${p.group
+                    ? `<span class="tag-pill">${p.group}</span>`
+                    : `<span style="color:#aaa;font-size:14px">Группа не назначена</span>`
+                }
+                  </div>
+                </div>
+              `;
+        }
+
+        function toggleEdit() {
+            editMode = !editMode;
+            const btn = document.getElementById('editBtn');
+            const fields = ['fieldEmail', 'fieldPhone'];
+            const saveBtn = document.getElementById('saveBtn');
+
+            if (editMode) {
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.removeAttribute('readonly');
+                });
+                btn.innerHTML = `
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  Отмена
+                `;
+                saveBtn.classList.add('visible');
+            } else {
+                fields.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.setAttribute('readonly', true);
+                        if (id === 'fieldEmail') el.value = profileData?.email || '';
+                        if (id === 'fieldPhone') el.value = profileData?.phone || '';
+                    }
+                });
+                btn.innerHTML = `
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Редактировать
+                `;
+                saveBtn.classList.remove('visible');
+            }
+        }
+
+        async function saveProfile() {
+            const email = document.getElementById('fieldEmail')?.value.trim();
+            const phone = document.getElementById('fieldPhone')?.value.trim();
+            const btn = document.getElementById('saveBtn');
+            const successEl = document.getElementById('saveSuccess');
+
+            btn.disabled = true;
+            btn.textContent = 'Сохранение...';
+
+            const res = await fetch(`${API}/profile?userId=${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Email: email, Phone: phone })
+            });
+
+            if (res.ok) {
+                editMode = false;
+                toggleEdit();
+                loadProfile();
+                showAlert('Данные сохранены', 'success');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Сохранить';
+        }
+
+        function logout() { localStorage.clear(); window.location.href = 'eduhub-login.html'; }
+        function openPasswordModal() {
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+            const modal = document.getElementById('passwordModal');
+            modal.style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        function toggleVis(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        async function changePassword() {
+            const oldPassword = document.getElementById('oldPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const errorEl = document.getElementById('passwordError');
+
+            if (!oldPassword || !newPassword) {
+                errorEl.textContent = 'Заполните все поля';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                errorEl.textContent = 'Новый пароль должен быть не короче 6 символов';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = 'Пароли не совпадают';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const res = await fetch(`${API}/profile/password?userId=${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ OldPassword: oldPassword, NewPassword: newPassword })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                errorEl.textContent = data.message || 'Ошибка';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            closePasswordModal();
+
+        }
+    </script>
+
+</body>
+</html>

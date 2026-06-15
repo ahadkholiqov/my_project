@@ -1,0 +1,136 @@
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\appsettings.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.staticwebassets.endpoints.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.exe
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.deps.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.runtimeconfig.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.pdb
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Npgsql.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.csproj.AssemblyReference.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.AssemblyInfoInputs.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.AssemblyInfo.cs
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.csproj.CoreCompileInputs.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\scopedcss\bundle\Login to EduHub.styles.css
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to.D6372076.Up2Date
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\refint\Login to EduHub.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.pdb
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\Login to EduHub.genruntimeconfig.cache
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\ref\Login to EduHub.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\Login to EduHub.staticwebassets.runtime.json
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\151fvnsipa-{0}-9zoatmm8v4-9zoatmm8v4.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\ClosedXML.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\ClosedXML.Parser.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\ExcelNumberFormat.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\RBush.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\SixLabors.Fonts.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\bin\Debug\net10.0\System.IO.Packaging.dll
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\8gdkt8numx-{0}-91clpnuu0u-91clpnuu0u.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\qtqr8akqrk-{0}-l2nk40mh5q-l2nk40mh5q.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\x8vsdopakq-{0}-rifwo0yckm-rifwo0yckm.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\6rvodfrakt-{0}-def9mt0c1a-def9mt0c1a.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\ivm9jsbgag-{0}-g72e0745ht-g72e0745ht.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\uxy3oxpe8u-{0}-ufxx1f0f8b-ufxx1f0f8b.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\7t3p05i5pe-{0}-twb1zkhmp5-twb1zkhmp5.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\6ueigk6z23-{0}-2e3lk78kb3-2e3lk78kb3.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\a4a89k4lvf-{0}-k9hxl8ho2a-k9hxl8ho2a.gz
+C:\Users\khali\Edu Hub\Login\Login to EduHub\Login to EduHub\obj\Debug\net10.0\compressed\fahzy2yxvr-{0}-5zfyf3t4fm-5zfyf3t4fm.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\appsettings.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.staticwebassets.endpoints.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.staticwebassets.runtime.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.exe
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.deps.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.runtimeconfig.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Login to EduHub.pdb
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\ClosedXML.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\ClosedXML.Parser.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\DocumentFormat.OpenXml.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\DocumentFormat.OpenXml.Framework.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\ExcelNumberFormat.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Microsoft.OpenApi.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Npgsql.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\RBush.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\SixLabors.Fonts.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\bin\Debug\net10.0\System.IO.Packaging.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.csproj.AssemblyReference.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.AssemblyInfoInputs.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.AssemblyInfo.cs
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.csproj.CoreCompileInputs.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\rjimswa.dswa.cache.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\scopedcss\bundle\Login to EduHub.styles.css
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\8gdkt8numx-{0}-91clpnuu0u-91clpnuu0u.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\6rvodfrakt-{0}-def9mt0c1a-def9mt0c1a.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\ivm9jsbgag-{0}-g72e0745ht-g72e0745ht.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.json.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\staticwebassets.development.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to.D6372076.Up2Date
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\refint\Login to EduHub.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.pdb
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\Login to EduHub.genruntimeconfig.cache
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\ref\Login to EduHub.dll
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\6ueigk6z23-{0}-152ectq1lr-152ectq1lr.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\qtqr8akqrk-{0}-p98ix77ayf-p98ix77ayf.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\x8vsdopakq-{0}-6hannijl0p-6hannijl0p.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\uxy3oxpe8u-{0}-cp90gedrbg-cp90gedrbg.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\fahzy2yxvr-{0}-2b0zm3qu8t-2b0zm3qu8t.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\151fvnsipa-{0}-p4cry1l5ca-p4cry1l5ca.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\a4a89k4lvf-{0}-8s7i656y80-8s7i656y80.gz
+C:\Users\khali\Desktop\!LOGIN TO EDU HUB\Login to EduHub\obj\Debug\net10.0\compressed\7t3p05i5pe-{0}-db9qs5owrh-db9qs5owrh.gz

@@ -1,0 +1,2124 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Администрация</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px 60px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 28px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: box-shadow 0.15s;
+        }
+
+            .stat-card:hover {
+                box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+            }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 24px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .tab {
+            padding: 8px 18px;
+            border-radius: 7px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #777;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+            .tab:hover {
+                color: #111;
+            }
+
+            .tab.active {
+                background: #fff;
+                color: #111;
+                font-weight: 600;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            }
+
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        .cycle-tabs {
+            display: flex;
+            gap: 0;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .cycle-tab {
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #777;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+            .cycle-tab:hover {
+                color: #111;
+            }
+
+            .cycle-tab.active {
+                background: #fff;
+                color: #111;
+                font-weight: 600;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+            width: 240px;
+            font-family: inherit;
+        }
+
+            .search-input:focus {
+                border-color: #111;
+            }
+
+        select.filter-select {
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+            background: #fff;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+            .btn-primary:hover {
+                background: #333;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1.5px solid #e8e8e8;
+        }
+
+        thead {
+            background: #f9f9f9;
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #888;
+            border-bottom: 1.5px solid #e8e8e8;
+        }
+
+        td {
+            padding: 12px 16px;
+            font-size: 14px;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .role-student {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .role-teacher {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .role-moderator {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .role-admin {
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .btn-icon {
+            background: none;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 5px 8px;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.15s;
+        }
+
+            .btn-icon:hover {
+                border-color: #aaa;
+            }
+
+            .btn-icon.danger:hover {
+                border-color: #e53935;
+                color: #e53935;
+            }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 24px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .field-input {
+            width: 100%;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            color: #333;
+            background: #f9f9f9;
+            font-family: inherit;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+            .field-input:focus {
+                border-color: #111;
+                background: #fff;
+            }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .btn-cancel {
+            background: none;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .modal-error {
+            color: #e53935;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .log-action {
+            font-weight: 600;
+            color: #111;
+        }
+
+        .log-details {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: #bbb;
+            white-space: nowrap;
+        }
+        .semester-form {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .semester-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .semester-form-group label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+            }
+
+        .holidays-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .holiday-tag {
+            background: #fce4ec;
+            color: #c62828;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .holiday-tag span {
+                cursor: pointer;
+                font-weight: 700;
+            }
+
+        .calendar-wrap {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .calendar-table {
+            border-collapse: collapse;
+            min-width: 100%;
+        }
+
+            .calendar-table th {
+                font-size: 11px;
+                color: #aaa;
+                font-weight: 600;
+                padding: 6px 4px;
+                text-align: center;
+                border: none;
+                white-space: nowrap;
+            }
+            .calendar-table tr th:first-child {
+                width: 28px;
+                min-width: 28px;
+                font-size: 10px;
+                padding: 4px 2px;
+            }
+
+            .calendar-table td {
+                width: 48px;
+                min-width: 48px;
+                height: 48px;
+                text-align: center;
+                vertical-align: middle;
+                border: 1px solid #f0f0f0;
+                cursor: pointer;
+                font-size: 11px;
+                padding: 4px;
+                transition: opacity 0.15s;
+            }
+
+                .calendar-table td:hover {
+                    opacity: 0.8;
+                }
+
+        .cal-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .cal-type {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .cal-empty {
+            background: #fff;
+        }
+
+        .cal-sunday {
+            background: #f5f5f5;
+            cursor: default;
+        }
+
+        .cal-holiday {
+            background: #fff8f8;
+            outline: 1.5px solid #e53935;
+        }
+
+            .cal-holiday .cal-date {
+                color: #c62828;
+            }
+
+            .cal-holiday .cal-type {
+                color: #e53935;
+            }
+
+        .cal-cycle-1 {
+            background: #fff59d;
+        }
+
+        .cal-cycle-2 {
+            background: #f8bbd0;
+        }
+
+        .cal-cycle-3 {
+            background: #bbdefb;
+        }
+
+        .cal-cycle-4 {
+            background: #d1c4e9; 
+
+        }
+        
+        .cal-cycle-5 {
+            background: #c8e6c9; 
+
+        }
+
+        .cal-blank {
+            background: #fff3e0;
+            border: 1.5px dashed #ffb74d;
+        }
+
+        .calendar-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <main class="main">
+        <div class="page-title">Администрация</div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f0f0f0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                </div>
+                <div><div class="stat-number" id="statUsers">—</div><div class="stat-label">Пользователей</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#e8f5e9;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3.33 2 8.67 2 12 0v-5" /></svg>
+                </div>
+                <div><div class="stat-number" id="statStudents">—</div><div class="stat-label">Студентов</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#e3f2fd;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2"><circle cx="12" cy="8" r="4" /><path d="M20 21a8 8 0 1 0-16 0" /></svg>
+                </div>
+                <div><div class="stat-number" id="statTeachers">—</div><div class="stat-label">Преподавателей</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#fff3e0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                </div>
+                <div><div class="stat-number" id="statModerators">—</div><div class="stat-label">Модераторов</div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background:#f3e5f5;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><line x1="19" y1="8" x2="19" y2="14" /><line x1="22" y1="11" x2="16" y2="11" /></svg>
+                </div>
+                <div><div class="stat-number" id="statGroups">—</div><div class="stat-label">Групп</div></div>
+            </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('users')">Пользователи</div>
+                <div class="tab" onclick="switchTab('groups')">Группы</div>
+                <div class="tab" onclick="switchTab('semester')">Семестр</div>
+                <div class="tab" onclick="switchTab('timetable')">Расписание</div>
+                <div class="tab" onclick="switchTab('logs')">История действий</div>
+            </div>
+            <div class="cycle-tabs" id="adminTimetableCycleTabs" style="display:none;">
+                <button class="cycle-tab tt-cycle-tab active" onclick="switchTimetableCycle(1, this)">Цикл 1</button>
+                <button class="cycle-tab tt-cycle-tab" onclick="switchTimetableCycle(2, this)">Цикл 2</button>
+                <button class="cycle-tab tt-cycle-tab" onclick="switchTimetableCycle(3, this)">Цикл 3</button>
+                <button class="cycle-tab tt-cycle-tab" onclick="switchTimetableCycle(4, this)">Цикл 4</button>
+                <button class="cycle-tab tt-cycle-tab" onclick="switchTimetableCycle(5, this)">Цикл 5</button>
+            </div>
+        </div>
+
+        <div class="tab-content active" id="tab-users"></div>
+        <div class="tab-content" id="tab-groups"></div>
+        <div class="tab-content" id="tab-logs"></div>
+        <div class="tab-content" id="tab-semester"></div>
+        <div class="tab-content" id="tab-timetable"></div>
+    </main>
+    <!-- Модалка просмотра профиля пользователя -->
+    <div class="modal-overlay" id="userProfileModal">
+        <div class="modal" style="max-width:480px;position:relative;">
+            <div id="userProfileContent">
+                <div style="text-align:center;padding:20px;color:#aaa;">Загрузка...</div>
+            </div>
+            <button onclick="document.getElementById('userProfileModal').classList.remove('open')" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1;">×</button>
+        </div>
+    </div>
+    <!-- Модалка пользователя -->
+    <div class="modal-overlay" id="userModal">
+        <div class="modal">
+            <div class="modal-title" id="userModalTitle">Добавить пользователя</div>
+            <div class="modal-error" id="userModalError"></div>
+            <div class="field-label">Имя</div>
+            <input class="field-input" id="uName" placeholder="Имя" />
+            <div class="field-label">Фамилия</div>
+            <input class="field-input" id="uSurname" placeholder="Фамилия" />
+            <div class="field-label">Отчество</div>
+            <input class="field-input" id="uMiddlename" placeholder="Отчество" />
+            <div class="field-label">Логин</div>
+            <input class="field-input" id="uLogin" placeholder="Логин" />
+            <div class="field-label">Пароль <span id="uPasswordHint" style="font-weight:400;color:#aaa;">(оставьте пустым чтобы не менять)</span></div>
+            <input class="field-input" id="uPassword" type="password" placeholder="Пароль" />
+            <div class="field-label">Email</div>
+            <input class="field-input" id="uEmail" placeholder="Email" />
+            <div class="field-label">Телефон</div>
+            <input class="field-input" id="uPhone" placeholder="Телефон" />
+            <div class="field-label">Роль</div>
+            <select class="field-input" id="uRole">
+                <option value="student">Студент</option>
+                <option value="teacher">Преподаватель</option>
+                <option value="moderator">Модератор</option>
+                <option value="admin">Администратор</option>
+            </select>
+            <div class="field-label">Группа</div>
+            <select class="field-input" id="uGroup">
+                <option value="">Без группы</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeUserModal()">Отмена</button>
+                <button class="btn-primary" onclick="saveUser()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    <!-- Модалка редактирования расписания -->
+    <div class="modal-overlay" id="editTimetableModal">
+        <div class="modal" style="max-width:460px;">
+            <div class="modal-title">Редактировать запись</div>
+            <div class="modal-error" id="editTimetableError"></div>
+            <input type="hidden" id="editTimetableId" />
+            <div class="field-label">Предмет</div>
+            <input class="field-input" id="etSubject" />
+            <div class="field-label">Преподаватель</div>
+            <input class="field-input" id="etTeacher" />
+            <div class="field-label">Время начала</div>
+            <input class="field-input" id="etTime" placeholder="08:00" />
+            <div class="field-label">Смена</div>
+            <select class="field-input" id="etShift">
+                <option value="1">1 (до 12:00)</option>
+                <option value="2">2 (после 12:00)</option>
+            </select>
+            <div class="field-label">Корпус</div>
+            <input class="field-input" id="etBuilding" />
+            <div class="field-label">Аудитория</div>
+            <input class="field-input" id="etRoom" />
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="document.getElementById('editTimetableModal').classList.remove('open')">Отмена</button>
+                <button class="btn-primary" onclick="saveEditTimetable()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    <!-- Модалка загрузки расписания -->
+    <div class="modal-overlay" id="uploadTimetableModal">
+        <div class="modal" style="max-width:420px;">
+            <div class="modal-title">Загрузить расписание из Excel</div>
+            <div style="font-size:13px;color:#aaa;margin-bottom:20px;">Файл .xlsx с расписанием. Старые записи выбранного цикла будут удалены.</div>
+            <div class="modal-error" id="uploadTimetableError"></div>
+            <div class="field-label">Цикл</div>
+            <div class="cycle-tabs" style="margin-bottom:16px;" id="uploadCycleTabs"></div>
+            <div class="field-label">Файл Excel (.xlsx)</div>
+            <input class="field-input" type="file" id="timetableFile" accept=".xlsx" style="margin-bottom:16px;" />
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeUploadModal()">Отмена</button>
+                <button class="btn-primary" id="btnUploadTimetable" onclick="uploadTimetable()">Проверить и загрузить</button>
+            </div>
+        </div>
+    </div>
+    <!-- Модалка превью расписания -->
+    <div class="modal-overlay" id="previewTimetableModal" onclick="if(event.target===this)closePreviewModal()">
+        <div class="modal" style="max-width:1100px;width:95%;">
+            <div class="modal-title">Проверка расписания перед загрузкой</div>
+            <div id="previewWarningBanner" style="display:none;background:#fff3e0;border:1.5px solid #ffb300;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#7a5000;"></div>
+            <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;margin-bottom:16px;">
+                <table id="previewTable" style="font-size:13px;">
+                    <thead>
+                        <tr>
+                            <th>Группа</th>
+                            <th>Предмет</th>
+                            <th>Преподаватель</th>
+                            <th>Время</th>
+                            <th>Смена</th>
+                            <th>Корпус</th>
+                            <th>Аудитория</th>
+                            <th>Дней (план)</th>
+                            <th>Дней (факт)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewTableBody"></tbody>
+                </table>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closePreviewModal()">Отмена</button>
+                <button class="btn-cancel" onclick="recheckPreview()">Перепроверить</button>
+                <button class="btn-primary" id="btnConfirmUpload" onclick="confirmUpload()" disabled>
+                    Подтвердить загрузку <span id="confirmCountdown">(5)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Модалка дня семестра -->
+    <div class="modal-overlay" id="dayModal">
+        <div class="modal" style="max-width:380px;">
+            <div class="modal-title" id="dayModalDate"></div>
+            <div style="font-size:13px;color:#aaa;margin-bottom:20px;" id="dayModalCurrent"></div>
+            <div class="modal-error" id="dayModalError"></div>
+
+            <div class="field-label">Действие</div>
+            <select class="field-input" id="dayModalAction" onchange="onDayActionChange()">
+                <option value="replace">Заменить этот день</option>
+                <option value="insert">Вставить день (сдвинуть поток вперёд)</option>
+                <option value="delete">Удалить этот день (сдвинуть поток назад)</option>
+            </select>
+
+            <div id="dayTypeSection">
+                <div class="field-label">Тип дня</div>
+                <select class="field-input" id="dayModalType">
+                    <option value="В">Выходной</option>
+                    <option value="П">Праздник</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="ЧР1/8">ЧР1/8</option>
+                    <option value="ЧР1/9">ЧР1/9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="ЧР2/17">ЧР2/17</option>
+                    <option value="ЧР2/18">ЧР2/18</option>
+                    <option value="ЧС">ЧС</option>
+                    <option value="КИН">КИН</option>
+                    <option value="ИН">ИН</option>
+                </select>
+
+                <div class="field-label">Цикл</div>
+                <select class="field-input" id="dayModalCycle">
+                    <option value="">— не указан —</option>
+                    <option value="1">Цикл 1</option>
+                    <option value="2">Цикл 2</option>
+                    <option value="3">Цикл 3</option>
+                    <option value="4">Цикл 4</option>
+                    <option value="5">Цикл 5</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeDayModal()">Отмена</button>
+                <button class="btn-primary" onclick="saveDayModal()">Применить</button>
+            </div>
+        </div>
+    </div>
+    <!-- Модалка группы -->
+    <div class="modal-overlay" id="groupModal">
+        <div class="modal">
+            <div class="modal-title" id="groupModalTitle">Добавить группу</div>
+            <div class="modal-error" id="groupModalError"></div>
+            <div class="field-label">Название</div>
+            <input class="field-input" id="gName" placeholder="Например: 1_400301ра" />
+            <div class="field-label">Год</div>
+            <input class="field-input" id="gYear" type="number" placeholder="2024" />
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeGroupModal()">Отмена</button>
+                <button class="btn-primary" onclick="saveGroup()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const userId = parseInt(localStorage.getItem('userId'));
+        const role = localStorage.getItem('userRole');
+
+        let allUsers = [];
+        let allGroups = [];
+        let editingUserId = null;
+        let editingGroupId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (role !== 'admin') { window.location.href = 'eduhub-login.html'; return; }
+            renderSidebar('admin');
+            loadStats();
+            loadUsers();
+        });
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', ['users', 'groups', 'semester', 'timetable', 'logs'][i] === name);
+            });
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + name).classList.add('active');
+
+            // Показываем/скрываем кнопки циклов
+            const cycleTabs = document.getElementById('adminTimetableCycleTabs');
+            cycleTabs.style.display = name === 'timetable' ? 'flex' : 'none';
+
+            if (name === 'users') loadUsers();
+            if (name === 'groups') loadGroups();
+            if (name === 'logs') loadLogs();
+            if (name === 'semester') loadSemester();
+            if (name === 'timetable') loadTimetable();
+        }
+
+        async function loadStats() {
+            const res = await fetch(`${API}/admin/stats?userId=${userId}`);
+            if (!res.ok) return;
+            const d = await res.json();
+            document.getElementById('statUsers').textContent = d.totalUsers;
+            document.getElementById('statStudents').textContent = d.totalStudents;
+            document.getElementById('statTeachers').textContent = d.totalTeachers;
+            document.getElementById('statModerators').textContent = d.totalModerators;
+            document.getElementById('statGroups').textContent = d.totalGroups;
+        }
+
+        // ── ПОЛЬЗОВАТЕЛИ ──
+
+        let currentStatusFilter = 'active';
+
+        async function loadUsers(search = '', roleFilter = '', groupFilter = '', statusFilter = null) {
+            if (statusFilter !== null) currentStatusFilter = statusFilter;
+            let url = `${API}/admin/users?userId=${userId}&status=${currentStatusFilter}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (roleFilter) url += `&role=${roleFilter}`;
+            if (groupFilter) url += `&groupId=${groupFilter}`;
+            const res = await fetch(url);
+            if (!res.ok) return;
+            allUsers = await res.json();
+            renderUsersTab();
+        }
+
+        function roleLabel(r) {
+            return { student: 'Студент', teacher: 'Преподаватель', moderator: 'Модератор', admin: 'Администратор' }[r] || r;
+        }
+
+        function roleBadge(r) {
+            return `<span class="role-badge role-${r}">${roleLabel(r)}</span>`;
+        }
+
+        function renderUserRow(u) {
+            return `
+                <tr style="${!u.isActive ? 'opacity:0.6;' : ''}">
+                    <td><span style="cursor:pointer;color:#111;font-weight:500;text-decoration:underline;text-underline-offset:2px;" onclick="openUserProfile(${u.id})">${u.name} ${u.surname}</span></td>
+                    <td>${u.login}</td>
+                    <td>${u.email || '—'}</td>
+                    <td>${roleBadge(u.roleName)}</td>
+                    <td>${u.groupName || '—'}</td>
+                    <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('ru-RU') : '—'}</td>
+                    <td style="display:flex;gap:6px;">
+                        <button class="btn-icon" onclick="openEditUser(${u.id})">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        ${u.isActive ? `
+                        <button class="btn-icon danger" onclick="deleteUser(${u.id}, '${u.login}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                        </button>
+                        ` : `
+                        <button class="btn-icon" style="color:#2e7d32;border-color:#a5d6a7;" onclick="restoreUser(${u.id}, '${u.login}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        </button>
+                        <button class="btn-icon danger" onclick="permanentDeleteUser(${u.id}, '${u.login}')">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                        </button>
+                        `}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function renderUsersTab() {
+            const tab = document.getElementById('tab-users');
+            tab.innerHTML = `
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;">
+                        <input type="radio" name="userStatus" value="active" ${currentStatusFilter === 'active' ? 'checked' : ''} onchange="loadUsers('','','','active')" /> Активные
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;">
+                        <input type="radio" name="userStatus" value="inactive" ${currentStatusFilter === 'inactive' ? 'checked' : ''} onchange="loadUsers('','','','inactive')" /> Деактивированные
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:#555;cursor:pointer;">
+                        <input type="radio" name="userStatus" value="all" ${currentStatusFilter === 'all' ? 'checked' : ''} onchange="loadUsers('','','','all')" /> Все
+                    </label>
+                </div>
+                <div class="toolbar">
+                    <input class="search-input" id="userSearch" placeholder="Поиск по имени, логину..." oninput="filterUsers()" />
+                    <select class="filter-select" id="roleFilter" onchange="filterUsers()">
+                        <option value="">Все роли</option>
+                        <option value="student">Студент</option>
+                        <option value="teacher">Преподаватель</option>
+                        <option value="moderator">Модератор</option>
+                        <option value="admin">Администратор</option>
+                    </select>
+                    <select class="filter-select" id="groupFilter" onchange="filterUsers()">
+                        <option value="">Все группы</option>
+                        ${allGroups.map(g => `<option value="${g.id}">${g.name}</option>`).join('')}
+                    </select>
+                    <button class="btn-primary" onclick="openAddUser()">+ Добавить</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Логин</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Группа</th>
+                            <th>Дата</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${(() => {
+                    if (allUsers.length === 0) return `<tr><td colspan="7"><div class="empty-state">Пользователей не найдено</div></td></tr>`;
+                    const active = allUsers.filter(u => u.isActive);
+                    const inactive = allUsers.filter(u => !u.isActive);
+                    let rows = '';
+                    if (active.length > 0) {
+                        rows += `<tr><td colspan="7" style="padding:8px 16px 4px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#e8f5e9;color:#2e7d32;">Активные</span></td></tr>`;
+                        rows += active.map(u => renderUserRow(u)).join('');
+                    }
+                    if (inactive.length > 0) {
+                        rows += `<tr><td colspan="7" style="padding:12px 16px 4px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#ffebee;color:#c62828;">Деактивированные</span></td></tr>`;
+                        rows += inactive.map(u => renderUserRow(u)).join('');
+                    }
+                    return rows;
+                })()}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function filterUsers() {
+            const search = document.getElementById('userSearch')?.value.toLowerCase() || '';
+            const roleFilter = document.getElementById('roleFilter')?.value || '';
+            const groupFilter = document.getElementById('groupFilter')?.value || '';
+
+            const filtered = allUsers.filter(u => {
+                const fullName = `${u.name || ''} ${u.surname || ''} ${u.middlename || ''}`.toLowerCase();
+                const matchSearch = !search ||
+                    fullName.includes(search) ||
+                    (u.login && u.login.toLowerCase().includes(search));
+                const matchRole = !roleFilter || u.role === roleFilter;
+                const matchGroup = !groupFilter || String(u.groupId) === groupFilter;
+                return matchSearch && matchRole && matchGroup;
+            });
+
+            renderUsersFiltered(filtered);
+        }
+
+        function renderUsersFiltered(users) {
+            const tbody = document.querySelector('#tab-users table tbody');
+            if (!tbody) return;
+
+            if (!users.length) {
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">Пользователей не найдено</div></td></tr>`;
+                return;
+            }
+
+            const active = users.filter(u => u.isActive);
+            const inactive = users.filter(u => !u.isActive);
+            let rows = '';
+
+            if (active.length > 0) {
+                rows += `<tr><td colspan="7" style="padding:8px 16px 4px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#e8f5e9;color:#2e7d32;">Активные</span></td></tr>`;
+                rows += active.map(u => renderUserRow(u)).join('');
+            }
+            if (inactive.length > 0) {
+                rows += `<tr><td colspan="7" style="padding:12px 16px 4px;"><span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#ffebee;color:#c62828;">Деактивированные</span></td></tr>`;
+                rows += inactive.map(u => renderUserRow(u)).join('');
+            }
+
+            tbody.innerHTML = rows;
+        }
+
+        async function openAddUser() {
+            await loadGroupsForModal();
+            editingUserId = null;
+            document.getElementById('userModalTitle').textContent = 'Добавить пользователя';
+            document.getElementById('uPasswordHint').style.display = 'none';
+            document.getElementById('uName').value = '';
+            document.getElementById('uSurname').value = '';
+            document.getElementById('uMiddlename').value = '';
+            document.getElementById('uLogin').value = '';
+            document.getElementById('uLogin').readOnly = false;
+            document.getElementById('uPassword').value = '';
+            document.getElementById('uEmail').value = '';
+            document.getElementById('uPhone').value = '';
+            document.getElementById('uRole').value = 'student';
+            document.getElementById('uGroup').value = '';
+            document.getElementById('userModalError').style.display = 'none';
+            document.getElementById('userModal').classList.add('open');
+        }
+
+        async function openEditUser(id) {
+            await loadGroupsForModal();
+            const res = await fetch(`${API}/admin/users/${id}?userId=${userId}`);
+            if (!res.ok) return;
+            const u = await res.json();
+            editingUserId = id;
+            document.getElementById('userModalTitle').textContent = 'Редактировать пользователя';
+            document.getElementById('uPasswordHint').style.display = 'inline';
+            document.getElementById('uName').value = u.name || '';
+            document.getElementById('uSurname').value = u.surname || '';
+            document.getElementById('uMiddlename').value = u.middlename || '';
+            document.getElementById('uLogin').value = u.login || '';
+            document.getElementById('uLogin').readOnly = true;
+            document.getElementById('uPassword').value = '';
+            document.getElementById('uEmail').value = u.email || '';
+            document.getElementById('uPhone').value = u.phone || '';
+            document.getElementById('uRole').value = u.roleName || 'student';
+            document.getElementById('uGroup').value = u.groupId || '';
+            document.getElementById('userModalError').style.display = 'none';
+            document.getElementById('userModal').classList.add('open');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('open');
+        }
+
+        async function loadGroupsForModal() {
+            if (allGroups.length === 0) {
+                const res = await fetch(`${API}/admin/groups?userId=${userId}`);
+                if (res.ok) allGroups = await res.json();
+            }
+            const sel = document.getElementById('uGroup');
+            sel.innerHTML = '<option value="">Без группы</option>' +
+                allGroups.map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+        }
+
+        async function saveUser() {
+            const errorEl = document.getElementById('userModalError');
+            const name = document.getElementById('uName').value.trim();
+            const surname = document.getElementById('uSurname').value.trim();
+            const login = document.getElementById('uLogin').value.trim();
+            const password = document.getElementById('uPassword').value.trim();
+            const email = document.getElementById('uEmail').value.trim();
+            const phone = document.getElementById('uPhone').value.trim();
+            const roleName = document.getElementById('uRole').value;
+            const groupId = document.getElementById('uGroup').value;
+
+            if (!name || !surname || !login) {
+                errorEl.textContent = 'Заполните имя, фамилию и логин';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (!editingUserId && !password) {
+                errorEl.textContent = 'Укажите пароль';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const middlename = document.getElementById('uMiddlename').value.trim();
+            const body = {
+                Name: name, Surname: surname, Middlename: middlename || null, Login: login,
+                Password: password, Email: email || null,
+                Phone: phone || null, RoleName: roleName,
+                GroupId: groupId ? parseInt(groupId) : null
+            };
+
+            const url = editingUserId
+                ? `${API}/admin/users/${editingUserId}?userId=${userId}`
+                : `${API}/admin/users?userId=${userId}`;
+            const method = editingUserId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                errorEl.textContent = data.message || 'Ошибка';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            closeUserModal();
+            loadStats();
+            loadUsers();
+        }
+
+        async function deleteUser(id, login) {
+            showConfirm(`Деактивировать пользователя "${login}"?`, async () => {
+                const res = await fetch(`${API}/admin/users/${id}?userId=${userId}`, { method: 'DELETE' });
+                if (res.ok) { loadStats(); loadUsers(); showAlert('Пользователь деактивирован', 'success'); }
+                else showAlert('Ошибка', 'error');
+            });
+        }
+
+        async function openUserProfile(id) {
+            document.getElementById('userProfileModal').classList.add('open');
+            document.getElementById('userProfileContent').innerHTML = '<div style="text-align:center;padding:20px;color:#aaa;">Загрузка...</div>';
+
+            const res = await fetch(`${API}/admin/users/${id}?userId=${userId}`);
+            if (!res.ok) { showAlert('Ошибка загрузки', 'error'); return; }
+            const u = await res.json();
+
+            const roleLabels = { student: 'Студент', teacher: 'Преподаватель', moderator: 'Модератор', admin: 'Администратор' };
+            const avatarColor = { student: '#2e7d32', teacher: '#1565c0', moderator: '#e65100', admin: '#c62828' }[u.roleName] || '#555';
+            const avatarLabel = { student: 'ST', teacher: 'TC', moderator: 'MD', admin: 'ADM' }[u.roleName] || '?';
+
+            const deactivateBtn = u.isActive
+                ? `<button style="background:none;border:none;color:#e53935;font-size:13px;cursor:pointer;padding:0;" onclick="deleteUser(${u.id}, '${u.login}');document.getElementById('userProfileModal').classList.remove('open')">Деактивировать</button>`
+                : `<button style="background:none;border:none;color:#2e7d32;font-size:13px;cursor:pointer;padding:0;" onclick="restoreUser(${u.id}, '${u.login}');document.getElementById('userProfileModal').classList.remove('open')">Активировать</button>`;
+
+            document.getElementById('userProfileContent').innerHTML = `
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                    <div style="width:56px;height:56px;border-radius:50%;background:${avatarColor};color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;">${avatarLabel}</div>
+                    <div>
+                        <div style="font-size:18px;font-weight:700;color:#111;">${u.name} ${u.surname}</div>
+                        <div style="font-size:13px;color:#aaa;">${roleLabels[u.roleName] || u.roleName}</div>
+                    </div>
+                    <div style="margin-left:auto;">
+                        <span style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:${u.isActive ? '#e8f5e9' : '#ffebee'};color:${u.isActive ? '#2e7d32' : '#c62828'};">
+                            ${u.isActive ? 'Активен' : 'Деактивирован'}
+                        </span>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+                    <div><div style="color:#aaa;margin-bottom:3px;">Логин</div><div style="color:#111;font-weight:500;">${u.login}</div></div>
+                    <div><div style="color:#aaa;margin-bottom:3px;">Группа</div><div style="color:#111;font-weight:500;">${u.groupName || '—'}</div></div>
+                    <div><div style="color:#aaa;margin-bottom:3px;">Email</div><div style="color:#111;font-weight:500;">${u.email || '—'}</div></div>
+                    <div><div style="color:#aaa;margin-bottom:3px;">Телефон</div><div style="color:#111;font-weight:500;">${u.phone || '—'}</div></div>
+                </div>
+                <div style="margin-top:20px;padding-top:16px;border-top:1.5px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;">
+                    ${deactivateBtn}
+                    <button class="btn-primary" id="userProfileEditBtn" style="padding:8px 16px;">Редактировать</button>
+                </div>
+            `;
+
+            document.getElementById('userProfileEditBtn').onclick = () => {
+                document.getElementById('userProfileModal').classList.remove('open');
+                openEditUser(id);
+            };
+        }
+
+        async function restoreUser(id, login) {
+            showConfirm(`Активировать пользователя "${login}"?`, async () => {
+                const res = await fetch(`${API}/admin/users/${id}/restore?userId=${userId}`, { method: 'PUT' });
+                if (res.ok) { loadStats(); loadUsers(); showAlert('Пользователь активирован', 'success'); }
+                else showAlert('Ошибка', 'error');
+            });
+        }
+
+        async function permanentDeleteUser(id, login) {
+            showConfirm(`Удалить "${login}" навсегда? Это действие нельзя отменить.`, async () => {
+                const res = await fetch(`${API}/admin/users/${id}/permanent?userId=${userId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (res.ok) { loadStats(); loadUsers(); showAlert('Пользователь удалён', 'success'); }
+                else showAlert(data.message || 'Ошибка', 'error');
+            });
+        }
+
+        // ── ГРУППЫ ──
+
+        async function loadGroups() {
+            const res = await fetch(`${API}/admin/groups?userId=${userId}`);
+            if (!res.ok) return;
+            allGroups = await res.json();
+            renderGroupsTab();
+        }
+
+        function renderGroupsTab() {
+            const tab = document.getElementById('tab-groups');
+            tab.innerHTML = `
+                                            <div class="toolbar">
+                                                <button class="btn-primary" onclick="openAddGroup()">+ Добавить группу</button>
+                                            </div>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Название</th>
+                                                        <th>Год</th>
+                                                        <th>Студентов</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${allGroups.length === 0 ? `<tr><td colspan="4"><div class="empty-state">Групп нет</div></td></tr>` :
+                    allGroups.map(g => `
+                                                        <tr>
+                                                            <td>${g.name}</td>
+                                                            <td>${g.year}</td>
+                                                            <td>${g.studentCount}</td>
+                                                            <td style="display:flex;gap:6px;">
+                                                                <button class="btn-icon" onclick="openEditGroup(${g.id}, '${g.name}', ${g.year})">
+                                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                                </button>
+                                                                <button class="btn-icon danger" onclick="deleteGroup(${g.id}, '${g.name}')">
+                                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+        }
+
+        function openAddGroup() {
+            editingGroupId = null;
+            document.getElementById('groupModalTitle').textContent = 'Добавить группу';
+            document.getElementById('gName').value = '';
+            document.getElementById('gYear').value = new Date().getFullYear();
+            document.getElementById('groupModalError').style.display = 'none';
+            document.getElementById('groupModal').classList.add('open');
+        }
+
+        function openEditGroup(id, name, year) {
+            editingGroupId = id;
+            document.getElementById('groupModalTitle').textContent = 'Редактировать группу';
+            document.getElementById('gName').value = name;
+            document.getElementById('gYear').value = year;
+            document.getElementById('groupModalError').style.display = 'none';
+            document.getElementById('groupModal').classList.add('open');
+        }
+
+        function closeGroupModal() {
+            document.getElementById('groupModal').classList.remove('open');
+        }
+
+        async function saveGroup() {
+            const errorEl = document.getElementById('groupModalError');
+            const name = document.getElementById('gName').value.trim();
+            const year = parseInt(document.getElementById('gYear').value);
+
+            if (!name) {
+                errorEl.textContent = 'Введите название группы';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const url = editingGroupId
+                ? `${API}/admin/groups/${editingGroupId}?userId=${userId}`
+                : `${API}/admin/groups?userId=${userId}`;
+            const method = editingGroupId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Name: name, Year: year })
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                errorEl.textContent = data.message || 'Ошибка';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            closeGroupModal();
+            loadStats();
+            loadGroups();
+        }
+
+        async function deleteGroup(id, name) {
+            showConfirm(`Удалить группу "${name}"?`, async () => {
+                const res = await fetch(`${API}/admin/groups/${id}?userId=${userId}`, { method: 'DELETE' });
+                if (!res.ok) {
+                    const data = await res.json();
+                    showAlert(data.message || 'Ошибка', 'error');
+                    return;
+                }
+                loadStats();
+                loadGroups();
+                showAlert('Группа удалена', 'success');
+            });
+        }
+
+        // ── ЛОГИ ──
+
+        async function loadLogs(filterRole = '') {
+            let url = `${API}/admin/logs?userId=${userId}`;
+            if (filterRole) url += `&filterRole=${filterRole}`;
+            const res = await fetch(url);
+            if (!res.ok) return;
+            const logs = await res.json();
+            renderLogsTab(logs);
+        }
+
+        function renderLogsTab(logs) {
+            const tab = document.getElementById('tab-logs');
+            tab.innerHTML = `
+                                            <div class="toolbar">
+                                                <select class="filter-select" onchange="loadLogs(this.value)">
+                                                    <option value="">Все роли</option>
+                                                    <option value="student">Студент</option>
+                                                    <option value="teacher">Преподаватель</option>
+                                                    <option value="moderator">Модератор</option>
+                                                    <option value="admin">Администратор</option>
+                                                </select>
+                                            </div>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Пользователь</th>
+                                                        <th>Роль</th>
+                                                        <th>Действие</th>
+                                                        <th>Детали</th>
+                                                        <th>Время</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${logs.length === 0 ? `<tr><td colspan="5"><div class="empty-state">Действий пока нет</div></td></tr>` :
+                    logs.map(l => `
+                                                        <tr>
+                                                            <td>${l.userName}<br><span style="font-size:12px;color:#aaa;">${l.userLogin}</span></td>
+                                                            <td>${roleBadge(l.userRole)}</td>
+                                                            <td class="log-action">${l.action}</td>
+                                                            <td class="log-details">${l.details}</td>
+                                                            <td class="log-time">${new Date(l.createdAt).toLocaleString('ru-RU')}</td>
+                                                        </tr>
+                                                    `).join('')}
+                                                </tbody>
+                                            </table>
+                                        `;
+        }
+        // ── СЕМЕСТР ──
+
+        let holidays = [];
+
+        function switchTabSemester() {
+            loadSemester();
+        }
+
+        function renderSemesterTab() {
+            const tab = document.getElementById('tab-semester');
+            tab.innerHTML = `
+                                    <div class="semester-form">
+                                        <div class="semester-form-group">
+                                            <label>Начало семестра</label>
+                                            <input class="field-input" type="date" id="semStart" style="width:160px;margin-bottom:0;" />
+                                        </div>
+                                        <div class="semester-form-group">
+                                            <label>Конец семестра</label>
+                                            <input class="field-input" type="date" id="semEnd" style="width:160px;margin-bottom:0;" />
+                                        </div>
+                                        <div class="semester-form-group" style="flex:1;min-width:200px;">
+                                            <label>Праздники</label>
+                                            <div style="display:flex;gap:8px;">
+                                                <input class="field-input" type="date" id="holidayInput" style="margin-bottom:0;" />
+                                                <button class="btn-primary" style="white-space:nowrap;align-self:flex-end;" onclick="addHoliday()">+ Добавить</button>
+                                            </div>
+                                            <div class="holidays-list" id="holidaysList"></div>
+                                        </div>
+                                        <button class="btn-primary" style="align-self:flex-end;" onclick="generateSemester()">Сгенерировать</button>
+                                    </div>
+                                    <div id="calendarSection"></div>
+                                `;
+        }
+
+        function addHoliday() {
+            const input = document.getElementById('holidayInput');
+            const val = input.value;
+            if (!val) return;
+            if (holidays.includes(val)) return;
+            holidays.push(val);
+            renderHolidays();
+            input.value = '';
+        }
+
+        function removeHoliday(val) {
+            holidays = holidays.filter(h => h !== val);
+            renderHolidays();
+        }
+
+        function renderHolidays() {
+            const list = document.getElementById('holidaysList');
+            if (!list) return;
+            list.innerHTML = holidays.map(h => `
+                                    <div class="holiday-tag">
+                                        ${new Date(h).toLocaleDateString('ru-RU')}
+                                        <span onclick="removeHoliday('${h}')">×</span>
+                                    </div>
+                                `).join('');
+        }
+
+        async function generateSemester() {
+            const start = document.getElementById('semStart').value;
+            const end = document.getElementById('semEnd').value;
+            if (!start || !end) { showAlert('Укажите начало и конец семестра', 'warning'); return; }
+
+            const res = await fetch(`${API}/admin/semester?userId=${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    StartDate: start,
+                    EndDate: end,
+                    Holidays: holidays.map(h => h)
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) { showAlert(data.message || 'Ошибка', 'error'); return; }
+            showAlert('Семестр сгенерирован', 'success');
+            loadSemester();
+        }
+
+        async function loadSemester() {
+            renderSemesterTab();
+            const res = await fetch(`${API}/admin/semester?userId=${userId}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            renderCalendar(data);
+        }
+
+        function renderCalendar(data) {
+            const section = document.getElementById('calendarSection');
+            if (!section) return;
+
+            const cycleColors = {
+                1: 'cal-cycle-1', 2: 'cal-cycle-2',
+                3: 'cal-cycle-3', 4: 'cal-cycle-4', 5: 'cal-cycle-5'
+            };
+
+            // Группируем дни по неделям (пн-сб)
+            const dayMap = {};
+            (data.Days || data.days || []).forEach(d => {
+                dayMap[d.Date || d.date] = d;
+            });
+
+            const start = new Date(data.StartDate || data.startDate);
+            const end = new Date(data.EndDate || data.endDate);
+
+            // Найдём первый понедельник
+            let cur = new Date(start);
+            while (cur.getDay() !== 1) cur.setDate(cur.getDate() - 1);
+
+            const weeks = [];
+            while (cur <= end) {
+                const week = [];
+                for (let i = 0; i < 6; i++) {
+                    week.push(new Date(cur));
+                    cur.setDate(cur.getDate() + 1);
+                }
+                cur.setDate(cur.getDate() + 1); // пропуск воскресенья
+                weeks.push(week);
+            }
+
+            const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+
+            let html = `
+                                    <div class="calendar-legend">
+                                        <div class="legend-item"><div class="legend-dot" style="background:#fff59d;border:1px solid #e0e0e0;"></div>Цикл 1</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#f8bbd0;border:1px solid #e0e0e0;"></div>Цикл 2</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#bbdefb;border:1px solid #e0e0e0;"></div>Цикл 3</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#d1c4e9;border:1px solid #e0e0e0;"></div>Цикл 4</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#c8e6c9;border:1px solid #e0e0e0;"></div>Цикл 5</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#fff8f8;border:1.5px solid #e53935;"></div>Праздник</div>
+                                        <div class="legend-item"><div class="legend-dot" style="background:#fff3e0;border:1.5px dashed #ffb74d;"></div>Не заполнен</div>
+                                    </div>
+                                    <div class="calendar-wrap">
+                                    <table class="calendar-table">
+                                    <thead><tr><th></th>${weeks.map((_, i) => `<th>${i + 1}<br><span style="font-weight:400;">нед.</span></th>`).join('')}</tr></thead>
+                                        <tbody>
+                                `;
+
+            for (let dayIdx = 0; dayIdx < 6; dayIdx++) {
+                html += `<tr><th>${dayNames[dayIdx]}</th>`;
+                weeks.forEach(week => {
+                    const date = week[dayIdx];
+                    const dateStr = date.toISOString().split('T')[0];
+                    const d = dayMap[dateStr];
+
+                    if (!d) {
+                        html += `<td class="cal-empty"></td>`;
+                        return;
+                    }
+
+                    let cls = '';
+                    let typeLabel = '';
+
+                    if (d.isHoliday || d.dayType === 'П') {
+                        cls = 'cal-holiday';
+                        typeLabel = 'Праздник';
+                    } else if (d.dayType === 'В') {
+                        cls = 'cal-sunday';
+                        typeLabel = 'Вых.';
+                    } else if (d.dayType === '') {
+                        cls = 'cal-blank';
+                        typeLabel = '?';
+                    } else {
+                        cls = cycleColors[d.cycleNumber] || '';
+                        let raw = d.dayType.replace(' (Суб)', '').replace(' (Доп)', '');
+                        typeLabel = /^\d+$/.test(raw) ? `День ${raw}` : raw;
+                    }
+
+                    const dateLabel = `${date.getDate()}.${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    const clickable = d.dayType !== 'В';
+
+                    html += `<td class="${cls}" ${clickable ? `onclick="openDayModal(${d.id}, '${dateStr}', '${d.dayType}', ${d.cycleNumber || 'null'})"` : ''}>
+                                            <div class="cal-date">${dateLabel}</div>
+                                            <div class="cal-type">${typeLabel}</div>
+                                            </td>`;
+                });
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table></div>`;
+            section.innerHTML = html;
+        }
+
+        // Модалка редактирования дня
+        let editingDayId = null;
+
+        function openDayModal(id, date, dayType, cycleNumber) {
+            editingDayId = id;
+            document.getElementById('dayModalDate').textContent = new Date(date).toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+            document.getElementById('dayModalCurrent').textContent = `Сейчас: ${dayType} ${cycleNumber ? '(Цикл ' + cycleNumber + ')' : ''}`;
+            document.getElementById('dayModalAction').value = 'replace';
+            document.getElementById('dayModalType').value = dayType.replace(' (Суб)', '').replace(' (Доп)', '');
+            document.getElementById('dayModalCycle').value = cycleNumber || '';
+            document.getElementById('dayModalError').style.display = 'none';
+            document.getElementById('dayTypeSection').style.display = 'block';
+            document.getElementById('dayModal').classList.add('open');
+        }
+
+        function onDayActionChange() {
+            const action = document.getElementById('dayModalAction').value;
+            document.getElementById('dayTypeSection').style.display = action === 'delete' ? 'none' : 'block';
+        }
+
+        function closeDayModal() {
+            document.getElementById('dayModal').classList.remove('open');
+        }
+
+        async function saveDayModal() {
+            const action = document.getElementById('dayModalAction').value;
+            const dayType = action === 'delete' ? '' : document.getElementById('dayModalType').value;
+            const cycleNumber = action === 'delete' ? null : document.getElementById('dayModalCycle').value;
+            const errorEl = document.getElementById('dayModalError');
+
+            if (action !== 'delete' && !dayType) {
+                errorEl.textContent = 'Выберите тип дня';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (action !== 'delete' && dayType !== 'В' && dayType !== 'П' && !cycleNumber) {
+                errorEl.textContent = 'Укажите цикл';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const actionLabel = action === 'replace' ? 'заменить' : action === 'insert' ? 'вставить день и сдвинуть поток вперёд' : 'удалить день и сдвинуть поток назад';
+            showConfirm(`Вы уверены? Действие: ${actionLabel}`, async () => {
+                const res = await fetch(`${API}/admin/semester/day/${editingDayId}?userId=${userId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        DayType: dayType,
+                        CycleNumber: cycleNumber ? parseInt(cycleNumber) : null,
+                        Insert: action === 'insert',
+                        Delete: action === 'delete'
+                    })
+                });
+
+                if (!res.ok) {
+                    const data = await res.json();
+                    errorEl.textContent = data.message || 'Ошибка';
+                    errorEl.style.display = 'block';
+                    return;
+                }
+
+                closeDayModal();
+                loadSemester();
+                showAlert('День обновлён', 'success');
+            });
+            return;
+        }
+        // ── РАСПИСАНИЕ ──
+
+        let activeTimetableCycle = 1;
+
+        async function loadTimetable() {
+            const res = await fetch(`${API}/admin/timetable/filters?userId=${userId}`);
+            const filters = res.ok ? await res.json() : { groups: [], teachers: [], buildings: [] };
+            renderTimetableTab(filters);
+            fetchTimetable();
+        }
+
+        async function fetchTimetable(group = '', teacher = '') {
+            let url = `${API}/admin/timetable?userId=${userId}&cycleNumber=${activeTimetableCycle}`;
+            if (group) url += `&group=${encodeURIComponent(group)}`;
+            if (teacher) url += `&teacher=${encodeURIComponent(teacher)}`;
+            const res = await fetch(url);
+            if (!res.ok) return;
+            const rows = await res.json();
+            renderTimetableTable(rows);
+        }
+
+        function switchTimetableCycle(cycle, btn) {
+            activeTimetableCycle = cycle;
+            document.querySelectorAll('.tt-cycle-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            fetchTimetable(
+                document.getElementById('ttGroupFilter')?.value || '',
+                document.getElementById('ttTeacherFilter')?.value || ''
+            );
+        }
+
+        function renderTimetableTab(filters) {
+            const tab = document.getElementById('tab-timetable');
+            tab.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <select class="filter-select" id="ttGroupFilter" onchange="fetchTimetable(this.value, document.getElementById('ttTeacherFilter').value)">
+                        <option value="">Все группы</option>
+                        ${filters.groups.map(g => `<option value="${g}">${g}</option>`).join('')}
+                    </select>
+                    <select class="filter-select" id="ttTeacherFilter" onchange="fetchTimetable(document.getElementById('ttGroupFilter').value, this.value)">
+                        <option value="">Все преподаватели</option>
+                        ${filters.teachers.map(t => `<option value="${t}">${t}</option>`).join('')}
+                    </select>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn-primary" onclick="openUploadModal()">+ Загрузить Excel</button>
+                    <button class="btn-primary" style="background:#fff;color:#e53935;border:1.5px solid #e53935;" onclick="clearTimetable()">Очистить всё</button>
+                </div>
+                </div>
+                <div id="timetableTableWrap"></div>
+                `;
+        }
+
+        function renderTimetableTable(rows) {
+            const wrap = document.getElementById('timetableTableWrap');
+            if (!wrap) return;
+
+            if (!rows.length) {
+                wrap.innerHTML = '<div class="empty-state">Расписание не загружено</div>';
+                return;
+            }
+
+            wrap.innerHTML = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Группа</th>
+                                        <th>Предмет</th>
+                                        <th>Преподаватель</th>
+                                        <th>Время</th>
+                                        <th>Смена</th>
+                                        <th>Корпус</th>
+                                        <th>Аудитория</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rows.map(r => `
+                                        <tr>
+                                            <td>${r.groupName}</td>
+                                            <td>${r.subjectName}</td>
+                                            <td>${r.teacherName}</td>
+                                            <td>${r.startTime.substring(0, 5)}</td>
+                                            <td>${r.shift}</td>
+                                            <td>${r.building}</td>
+                                            <td>${r.roomNumber}</td>
+                                            <td>
+                                                <button class="btn-icon" onclick="openEditTimetableModal(${r.id}, '${r.subjectName.replace(/'/g, "\\'")}', '${r.teacherName.replace(/'/g, "\\'")}', '${r.startTime}', '${r.shift}', '${r.building.replace(/'/g, "\\'")}', '${r.roomNumber.replace(/'/g, "\\'")}')">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                </button>
+                                                <button class="btn-icon" style="border-color:#e53935;color:#e53935;" onclick="deleteTimetableRow(${r.id})">
+                                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        `;
+        }
+
+        async function deleteTimetableRow(id) {
+            showConfirm('Удалить эту запись расписания?', async () => {
+                const res = await fetch(`${API}/admin/timetable/${id}?userId=${userId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showAlert('Запись удалена', 'success');
+                    loadTimetable();
+                } else showAlert('Ошибка удаления', 'error');
+            });
+        }
+
+        async function clearTimetable() {
+            showConfirm(`Удалить расписание Цикла ${activeTimetableCycle}? Это действие необратимо.`, async () => {
+                const res = await fetch(`${API}/admin/timetable?userId=${userId}&cycleNumber=${activeTimetableCycle}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (res.ok) {
+                    showAlert(data.message, 'success');
+                    loadTimetable();
+                } else showAlert('Ошибка', 'error');
+            });
+        }
+
+        let selectedUploadCycle = 1;
+
+        function openUploadModal() {
+            selectedUploadCycle = activeTimetableCycle;
+
+            // Рендерим кнопки циклов динамически
+            const tabsEl = document.getElementById('uploadCycleTabs');
+            tabsEl.innerHTML = [1, 2, 3, 4, 5].map(c => `
+                <button class="cycle-tab upload-cycle-tab ${c === activeTimetableCycle ? 'active' : ''}" onclick="selectUploadCycle(${c}, this)">Цикл ${c}</button>
+                `).join('');
+
+            document.getElementById('uploadTimetableError').style.display = 'none';
+            document.getElementById('timetableFile').value = '';
+            document.getElementById('uploadTimetableModal').classList.add('open');
+        }
+
+        function selectUploadCycle(cycle, btn) {
+            selectedUploadCycle = cycle;
+            document.querySelectorAll('.upload-cycle-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadTimetableModal').classList.remove('open');
+        }
+
+        function openEditTimetableModal(id, subject, teacher, startTime, shift, building, room) {
+            document.getElementById('editTimetableId').value = id;
+            document.getElementById('etSubject').value = subject;
+            document.getElementById('etTeacher').value = teacher;
+            document.getElementById('etTime').value = startTime.substring(0, 5);
+            document.getElementById('etShift').value = shift;
+            document.getElementById('etBuilding').value = building;
+            document.getElementById('etRoom').value = room;
+            document.getElementById('editTimetableError').style.display = 'none';
+            document.getElementById('editTimetableModal').classList.add('open');
+        }
+
+        async function saveEditTimetable() {
+            const id = document.getElementById('editTimetableId').value;
+            const subject = document.getElementById('etSubject').value.trim();
+            const teacher = document.getElementById('etTeacher').value.trim();
+            const time = document.getElementById('etTime').value.trim();
+            const shift = document.getElementById('etShift').value;
+            const building = document.getElementById('etBuilding').value.trim();
+            const room = document.getElementById('etRoom').value.trim();
+            const errorEl = document.getElementById('editTimetableError');
+
+            if (!subject || !teacher || !time) {
+                errorEl.textContent = 'Заполните предмет, преподавателя и время';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const res = await fetch(`${API}/admin/timetable/${id}?userId=${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    SubjectName: subject,
+                    TeacherName: teacher,
+                    StartTime: time,
+                    Shift: shift,
+                    Building: building,
+                    RoomNumber: room
+                })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('editTimetableModal').classList.remove('open');
+                showAlert('Запись обновлена', 'success');
+                loadTimetable();
+            } else {
+                errorEl.textContent = data.message || 'Ошибка';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        async function uploadTimetable() {
+            const file = document.getElementById('timetableFile').files[0];
+            const errorEl = document.getElementById('uploadTimetableError');
+
+            if (!file) {
+                errorEl.textContent = 'Выберите файл .xlsx';
+                errorEl.style.display = 'block';
+                return;
+            }
+            if (!file.name.endsWith('.xlsx')) {
+                errorEl.textContent = 'Только файлы .xlsx';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            errorEl.style.display = 'none';
+            const btn = document.getElementById('btnUploadTimetable');
+            btn.disabled = true;
+            btn.textContent = 'Проверка...';
+
+            const fd = new FormData();
+            fd.append('file', file);
+
+            const res = await fetch(`${API}/admin/timetable/preview?userId=${userId}&cycleNumber=${selectedUploadCycle}`, {
+                method: 'POST',
+                body: fd
+            });
+
+            btn.disabled = false;
+            btn.textContent = 'Проверить и загрузить';
+
+            const data = await res.json();
+            if (!res.ok) {
+                errorEl.textContent = data.message || 'Ошибка чтения файла';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            closeUploadModal();
+            openPreviewModal(data, file, selectedUploadCycle);
+        }
+        let pendingUploadFile = null;
+        let pendingUploadCycle = null;
+        let countdownTimer = null;
+        let previewData = [];
+
+        function openPreviewModal(data, file, cycle) {
+            document.getElementById('previewTimetableModal').classList.remove('open');
+            pendingUploadFile = file;
+            pendingUploadCycle = cycle;
+
+            const tbody = document.getElementById('previewTableBody');
+            tbody.innerHTML = data.rows.map((r, idx) => `
+        <tr id="previewRow_${idx}" style="${r.hasDayCountMismatch ? 'background:#fff3e0;cursor:pointer;' : 'cursor:pointer;'}"
+            onclick="toggleDayEditor(${idx})">
+            <td>${r.groupName}</td>
+            <td>${r.subjectName}</td>
+            <td>${r.teacherName}</td>
+            <td>${r.startTime}</td>
+            <td>${r.shift}</td>
+            <td>${r.building || '—'}</td>
+            <td>${r.roomNumber || '—'}</td>
+            <td style="${r.hasDayCountMismatch ? 'color:#e65100;font-weight:600;' : ''}">${r.declaredDayCount}</td>
+            <td id="factCount_${idx}" style="${r.hasDayCountMismatch ? 'color:#e65100;font-weight:600;' : ''}">${r.actualDayCount}</td>
+        </tr>
+        <tr id="dayEditor_${idx}" style="display:none;background:#f5f5f5;">
+            <td colspan="9" style="padding:10px 16px;">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;">
+                    ${Array.from({ length: 18 }, (_, i) => `
+                        <label style="display:flex;align-items:center;gap:3px;font-size:12px;cursor:pointer;">
+                            <input type="checkbox" id="slot_${idx}_${i}"
+                                ${r.daySlots && r.daySlots[i] === '1' ? 'checked' : ''}
+                                onchange="recalcDays(${idx})">
+                            ${i + 1}
+                        </label>
+                    `).join('')}
+                </div>
+                <div style="font-size:13px;">
+                    Итого отмечено: <b id="slotCount_${idx}">${r.actualDayCount}</b>
+                    &nbsp;|&nbsp; Заявлено в файле: <input type="number" id="declared_${idx}" value="${r.declaredDayCount}" min="0" max="18"
+                        style="width:48px;padding:2px 6px;border:1.5px solid #d1d5db;border-radius:5px;font-size:13px;text-align:center;"
+                        onchange="previewData[${idx}].declaredDayCount=+this.value;recalcDays(${idx})">
+                    &nbsp;&nbsp;
+                    <button onclick="applyDaySlots(${idx})" 
+                        style="padding:4px 12px;background:#1a1a1a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;">
+                        Применить
+                    </button>
+                    <button onclick="revertAndClose(${idx})"
+                        style="padding:4px 10px;background:#e5e7eb;color:#333;border:none;border-radius:6px;cursor:pointer;font-size:12px;margin-left:4px;">
+                        Закрыть
+                    </button>
+                </div>
+            </td>
+            </tr>
+            `).join('');
+            previewData = data.rows.map(r => Object.assign({}, r));
+            const undoBtn = document.getElementById('btnUndo');
+
+            const banner = document.getElementById('previewWarningBanner');
+            if (data.warningCount > 0) {
+                banner.style.display = 'block';
+                banner.innerHTML = `<b>⚠ ${data.warningCount} предупреждений:</b><br>` +
+                    data.errors.map(e => `• ${e}`).join('<br>');
+            } else {
+                banner.style.display = 'none';
+                banner.innerHTML = '';
+            }
+
+            // Кнопка — без таймера, просто активна если нет критических проблем
+            const btn = document.getElementById('btnConfirmUpload');
+            const countdown = document.getElementById('confirmCountdown');
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+            if (countdown) countdown.textContent = '';
+            btn.disabled = false;
+            if (!btn) return;
+            btn.textContent = data.warningCount > 0
+                ? `Загрузить несмотря на предупреждения (${data.warningCount})`
+                : 'Подтвердить загрузку';
+
+            document.getElementById('previewTimetableModal').classList.add('open');
+        }
+
+        function toggleDayEditor(idx) {
+            const editor = document.getElementById(`dayEditor_${idx}`);
+            const isOpen = editor.style.display !== 'none';
+
+            // Закрыть все открытые — с откатом изменений
+            document.querySelectorAll('[id^="dayEditor_"]').forEach(el => {
+                if (el.style.display !== 'none') {
+                    const openIdx = el.id.replace('dayEditor_', '');
+                    revertDaySlots(+openIdx);
+                    el.style.display = 'none';
+                }
+            });
+
+            if (!isOpen) {
+                // Сохранить оригинальное состояние перед открытием
+                const slots = previewData[idx].daySlots || '000000000000000000';
+                for (let i = 0; i < 18; i++) {
+                    const cb = document.getElementById(`slot_${idx}_${i}`);
+                    if (cb) cb.checked = slots[i] === '1';
+                }
+                const declaredEl = document.getElementById(`declared_${idx}`);
+                if (declaredEl) declaredEl.value = previewData[idx].declaredDayCount;
+                editor.dataset.originalSlots = slots;
+                editor.dataset.originalDeclared = previewData[idx].declaredDayCount;
+                editor.style.display = 'table-row';
+            }
+        }
+
+        function revertDaySlots(idx) {
+            const editor = document.getElementById(`dayEditor_${idx}`);
+            if (!editor) return;
+            const original = editor.dataset.originalSlots;
+            const originalDeclared = editor.dataset.originalDeclared;
+            if (!original) return;
+
+            for (let i = 0; i < 18; i++) {
+                const cb = document.getElementById(`slot_${idx}_${i}`);
+                if (cb) cb.checked = original[i] === '1';
+            }
+            const declaredEl = document.getElementById(`declared_${idx}`);
+            if (declaredEl) declaredEl.value = originalDeclared;
+
+            // Вернуть визуал
+            const count = (original.match(/1/g) || []).length;
+            const slotCountEl = document.getElementById(`slotCount_${idx}`);
+            if (slotCountEl) slotCountEl.textContent = count;
+
+            const declared = +originalDeclared;
+            previewData[idx].declaredDayCount = declared;
+            recalcDays(idx);
+        }
+
+        function recalcDays(idx) {
+            let count = 0;
+            for (let i = 0; i < 18; i++) {
+                if (document.getElementById(`slot_${idx}_${i}`)?.checked) count++;
+            }
+            document.getElementById(`slotCount_${idx}`).textContent = count;
+            const declared = +document.getElementById(`declared_${idx}`)?.value || 0;
+            const mismatch = declared > 0 && declared !== count;
+            const factEl = document.getElementById(`factCount_${idx}`);
+            if (factEl) {
+                factEl.style.color = mismatch ? '#e65100' : '';
+                factEl.style.fontWeight = mismatch ? '600' : '';
+            }
+        }
+
+        function applyDaySlots(idx) {
+            let slots = '';
+            let count = 0;
+            for (let i = 0; i < 18; i++) {
+                const checked = document.getElementById(`slot_${idx}_${i}`)?.checked;
+                slots += checked ? '1' : '0';
+                if (checked) count++;
+            }
+            previewData[idx].daySlots = slots;
+            previewData[idx].actualDayCount = count;
+            const declaredEl = document.getElementById(`declared_${idx}`);
+            if (declaredEl) previewData[idx].declaredDayCount = +declaredEl.value;
+            previewData[idx].hasDayCountMismatch = (previewData[idx].declaredDayCount > 0 && previewData[idx].declaredDayCount !== count);
+
+            // Обновить визуал строки
+            const factEl = document.getElementById(`factCount_${idx}`);
+            factEl.textContent = count;
+            factEl.style.color = previewData[idx].hasDayCountMismatch ? '#e65100' : '';
+            factEl.style.fontWeight = previewData[idx].hasDayCountMismatch ? '600' : '';
+
+            const row = document.getElementById(`previewRow_${idx}`);
+            row.style.background = previewData[idx].hasDayCountMismatch ? '#fff3e0' : '';
+
+            const planEl = document.querySelector(`#previewRow_${idx} td:nth-child(8)`);
+            if (planEl) {
+                planEl.textContent = previewData[idx].declaredDayCount;
+                planEl.style.color = previewData[idx].hasDayCountMismatch ? '#e65100' : '';
+                planEl.style.fontWeight = previewData[idx].hasDayCountMismatch ? '600' : '';
+            }
+
+            const editor = document.getElementById(`dayEditor_${idx}`);
+            if (editor) {
+                editor.dataset.originalSlots = previewData[idx].daySlots;
+                editor.dataset.originalDeclared = previewData[idx].declaredDayCount;
+            }
+
+            toggleDayEditor(idx);
+            const undoBtn = document.getElementById('btnUndo');
+
+        }
+
+        function closePreviewModal() {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+            document.getElementById('previewTimetableModal').classList.remove('open');
+            pendingUploadFile = null;
+            pendingUploadCycle = null;
+        }
+
+        async function confirmUpload() {
+            if (!previewData.length) return;
+            console.log('confirmUpload called, previewData:', previewData.length, 'cycle:', pendingUploadCycle);
+
+            const btn = document.getElementById('btnConfirmUpload');
+            btn.disabled = true;
+            btn.textContent = 'Загрузка...';
+
+            const res = await fetch(`${API}/admin/timetable/upload-json?userId=${userId}&cycleNumber=${pendingUploadCycle}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(previewData)
+            });
+
+            const data = await res.json();
+            closePreviewModal();
+
+            if (res.ok) {
+                showAlert(data.message, 'success');
+                loadTimetable();
+            } else {
+                showAlert(data.message || 'Ошибка загрузки', 'error');
+            }
+        }
+        function revertAndClose(idx) {
+            revertDaySlots(idx);
+            document.getElementById(`dayEditor_${idx}`).style.display = 'none';
+        }
+
+        function recheckPreview() {
+            let problems = 0;
+            previewData.forEach((r, idx) => {
+                const mismatch = r.declaredDayCount > 0 && r.declaredDayCount !== r.actualDayCount;
+                previewData[idx].hasDayCountMismatch = mismatch;
+                const row = document.getElementById(`previewRow_${idx}`);
+                if (row) row.style.background = mismatch ? '#fff3e0' : '';
+                const factEl = document.getElementById(`factCount_${idx}`);
+                if (factEl) {
+                    factEl.style.color = mismatch ? '#e65100' : '';
+                    factEl.style.fontWeight = mismatch ? '600' : '';
+                }
+                if (mismatch) problems++;
+            });
+
+            const banner = document.getElementById('previewWarningBanner');
+            if (problems > 0) {
+                banner.style.display = 'block';
+                banner.innerHTML = `<b>⚠ После перепроверки найдено ${problems} несоответствий — строки выделены.</b>`;
+            } else {
+                banner.style.display = 'block';
+                banner.innerHTML = `<b style="color:#2e7d32;">✓ Всё в порядке, несоответствий не найдено.</b>`;
+                banner.style.background = '#e8f5e9';
+                banner.style.borderColor = '#66bb6a';
+                banner.style.color = '#2e7d32';
+            }
+
+            const btn = document.getElementById('btnConfirmUpload');
+            if (btn) btn.textContent = problems > 0
+                ? `Загрузить несмотря на предупреждения (${problems})`
+                : 'Подтвердить загрузку';
+        }
+    </script>
+</body>
+</html>

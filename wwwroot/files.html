@@ -1,0 +1,2172 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Файлообменник</title>
+    <link rel="stylesheet" href="sidebar.css" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px 0px;
+            overflow: hidden;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 6px;
+        }
+
+        .page-sub {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 28px;
+        }
+
+        .context-bar {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .context-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .context-subject {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .context-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .context-dot {
+            color: #ccc;
+        }
+
+        .context-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .context-day-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .context-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-workday {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-exam {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-consult {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-holiday {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .badge-weekend {
+            background: #f5f5f5;
+            color: #aaa;
+        }
+
+        /* ── ПРАВЫЙ САЙДБАР ПРЕПОДАВАТЕЛЯ ── */
+        .teacher-sidebar {
+            width: 260px;
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 16px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            display: none;
+        }
+
+            .teacher-sidebar.visible {
+                display: block;
+            }
+
+        .subject-item {
+            margin-bottom: 6px;
+        }
+
+        .subject-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
+            transition: color 0.15s;
+            user-select: none;
+            border-radius: 8px;
+        }
+
+            .subject-header:hover {
+                background: #f5f5f5;
+            }
+
+        .subject-arrow {
+            font-size: 10px;
+            transition: transform 0.2s;
+            color: #aaa;
+        }
+
+        .subject-header.open .subject-arrow {
+            transform: rotate(180deg);
+        }
+
+        .subject-groups {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 4px 0 4px 18px;
+        }
+
+            .subject-groups.open {
+                display: flex;
+            }
+
+        .group-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+            border: none;
+            background: #f5f5f5;
+            text-align: left;
+            width: 100%;
+            transition: background 0.15s, color 0.15s;
+        }
+
+            .group-btn::before {
+                content: 'Группа';
+                font-size: 11px;
+                font-weight: 600;
+                color: #aaa;
+                flex-shrink: 0;
+            }
+
+            .group-btn:hover {
+                background: #ebebeb;
+                color: #111;
+            }
+
+            .group-btn.active {
+                background: #111;
+                color: #fff;
+            }
+
+                .group-btn.active::before {
+                    color: #888;
+                }
+
+        /* ── ЧАТ ── */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+            background-image: radial-gradient(#d0d0d0 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-width: 80%;
+            align-self: flex-start;
+            margin: 0 8px;
+        }
+
+        .chat-message-header {
+            font-size: 11px;
+            color: #aaa;
+            padding-left: 4px;
+        }
+
+        .chat-message-body {
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        .chat-message-text {
+            font-size: 13px;
+            color: #111;
+            margin-bottom: 6px;
+        }
+
+            .chat-message-text:last-child {
+                margin-bottom: 0;
+            }
+
+        .chat-file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: #fff;
+            border-radius: 8px;
+            margin-top: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .chat-file-item:hover {
+                background: #f0f0f0;
+            }
+
+        .chat-file-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .chat-file-name {
+            font-size: 12px;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .chat-file-size {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .chat-date-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0;
+        }
+
+            .chat-date-separator span {
+                background: rgba(0,0,0,0.12);
+                color: #555;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 3px 12px;
+                border-radius: 20px;
+                letter-spacing: 0.3px;
+            }
+
+        /* ── ПОЛЕ ВВОДА ── */
+        .chat-input-area {
+            border-top: 1.5px solid #e8e8e8;
+            padding: 12px 16px;
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            z-index: 5;
+        }
+
+        .chat-attachments-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .attachment-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #111;
+        }
+
+        .attachment-chip-remove {
+            cursor: pointer;
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1;
+        }
+
+            .attachment-chip-remove:hover {
+                color: #e53935;
+            }
+
+        .chat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-input-text {
+            flex: 1;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 24px;
+            padding: 10px 18px;
+            font-size: 13px;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+            transition: border-color 0.15s;
+            min-height: 42px;
+            max-height: 120px;
+        }
+
+            .chat-input-text:focus {
+                border-color: #bbb;
+            }
+
+            .chat-input-text::placeholder {
+                color: #bbb;
+            }
+
+        .btn-chat-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #111;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s;
+        }
+
+            .btn-chat-action:hover {
+                background: #333;
+            }
+
+        /* ── МОДАЛКА ВЫБОРА ФАЙЛА ── */
+        .file-picker-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .file-picker-overlay.open {
+                display: flex;
+            }
+
+        .file-picker-modal {
+            background: #fff;
+            border-radius: 16px;
+            width: 820px;
+            max-width: 95vw;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .file-picker-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1.5px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-picker-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .file-picker-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .file-picker-left {
+            flex: 1;
+            min-width: 0;
+            border-right: 1.5px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .file-picker-right {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 24px;
+            gap: 16px;
+        }
+
+        .file-picker-right-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111;
+            text-align: center;
+        }
+
+        .file-picker-right-sub {
+            font-size: 12px;
+            color: #aaa;
+            text-align: center;
+        }
+
+        .btn-pick-device {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-pick-device:hover {
+                background: #333;
+            }
+
+        .file-picker-search {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 9px;
+            font-size: 13px;
+            outline: none;
+            width: 100%;
+        }
+
+            .file-picker-search:focus {
+                border-color: #bbb;
+            }
+
+        .file-picker-list {
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .file-picker-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border: 1.5px solid transparent;
+        }
+
+            .file-picker-item:hover {
+                background: #f5f5f5;
+            }
+
+            .file-picker-item.selected {
+                background: #f0f0f0;
+                border-color: #111;
+            }
+
+        .file-picker-item-info {
+            flex: 1;
+        }
+
+        .file-picker-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .file-picker-item-sub {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .file-picker-footer {
+            padding: 14px 24px;
+            border-top: 1.5px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-picker-footer-count {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .btn-attach {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            padding: 9px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-attach:hover {
+                background: #333;
+            }
+
+        /* ── МОДАЛКА РАССЫЛКИ ── */
+        .broadcast-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: transparent;
+            z-index: 300;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding-bottom: 80px;
+            padding-right: 320px;
+        }
+
+            .broadcast-overlay.open {
+                display: flex;
+            }
+
+        .broadcast-modal {
+            background: #fff;
+            border-radius: 16px;
+            width: 320px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            border: 1.5px solid #e8e8e8;
+        }
+
+        .broadcast-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 6px;
+        }
+
+        .broadcast-sub {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 18px;
+        }
+
+        .broadcast-group-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+            .broadcast-group-item:last-child {
+                border-bottom: none;
+            }
+
+            .broadcast-group-item input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                accent-color: #111;
+                cursor: pointer;
+            }
+
+        .broadcast-group-label {
+            font-size: 13px;
+            color: #111;
+            cursor: pointer;
+        }
+
+        .broadcast-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-broadcast-cancel {
+            flex: 1;
+            padding: 10px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 9px;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .btn-broadcast-send {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 9px;
+            background: #111;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .files-section {
+            margin-top: 8px;
+        }
+
+        .files-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .files-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .btn-upload {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-upload:hover {
+                background: #333;
+            }
+
+        .cycle-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 4px;
+            width: fit-content;
+        }
+
+        .cycle-tab {
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: #777;
+            transition: all 0.15s;
+        }
+
+            .cycle-tab:hover {
+                color: #111;
+            }
+
+            .cycle-tab.active {
+                background: #fff;
+                color: #111;
+                font-weight: 600;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+            }
+
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .file-item {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .icon-pdf {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .icon-word {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .icon-excel {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .icon-ppt {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .icon-other {
+            background: #f5f5f5;
+            color: #555;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 3px;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .file-tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #f0f0f0;
+            color: #555;
+            flex-shrink: 0;
+        }
+
+        .btn-download {
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+            .btn-download:hover {
+                background: #333;
+            }
+
+        .btn-delete-file {
+            background: none;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 7px 10px;
+            cursor: pointer;
+            color: #e53935;
+            flex-shrink: 0;
+            transition: border-color 0.15s;
+        }
+
+            .btn-delete-file:hover {
+                border-color: #e53935;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .field-input {
+            width: 100%;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 14px;
+            color: #333;
+            background: #f9f9f9;
+            font-family: inherit;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+            .field-input:focus {
+                border-color: #111;
+                background: #fff;
+            }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 8px;
+        }
+
+        .btn-cancel {
+            background: none;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .modal-error {
+            color: #e53935;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: none;
+        }
+        /* Правая панель фильтров */
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px 80px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .filters-panel {
+            width: 280px;
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filters-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 18px;
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+        }
+
+            .filter-group:last-child {
+                margin-bottom: 0;
+            }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 4px 0;
+        }
+
+            .filter-checkbox input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                accent-color: #111;
+            }
+
+            .filter-checkbox label {
+                font-size: 13px;
+                color: #111;
+                cursor: pointer;
+                user-select: none;
+            }
+
+        .filter-reset {
+            margin-top: 16px;
+            padding: 8px 14px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.15s;
+        }
+
+            .filter-reset:hover {
+                background: #e8e8e8;
+            }
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            background: #e53935;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .tab-dot {
+            width: 7px;
+            height: 7px;
+            background: #e53935;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main">
+        <div class="main-content">
+            <div class="page-title">Файлообменник</div>
+            <div class="page-sub">Учебные материалы от преподавателей</div>
+            <div id="mainContent"><div class="empty-state">Загрузка...</div></div>
+        </div><!-- конец main-content -->
+        <!-- Правый сайдбар преподавателя -->
+        <div class="teacher-sidebar" id="teacherSidebar">
+            <div style="font-size:12px;font-weight:600;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Мои группы</div>
+            <div id="teacherSubjectList"></div>
+        </div>
+        <div class="filters-panel" id="filtersPanel" style="display:none;">
+            <div class="filters-title">Фильтры</div>
+
+            <div class="filter-group">
+                <span class="filter-label">Тип документа</span>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterBook" value="book" onchange="applyFilters()">
+                    <label for="filterBook">Книга</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterSyllabus" value="syllabus" onchange="applyFilters()">
+                    <label for="filterSyllabus">Силлабус</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterEssay" value="essay" onchange="applyFilters()">
+                    <label for="filterEssay">Реферат</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterTemplate" value="template" onchange="applyFilters()">
+                    <label for="filterTemplate">Трафарет</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterGuide" value="guide" onchange="applyFilters()">
+                    <label for="filterGuide">Методичка</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterArticle" value="article" onchange="applyFilters()">
+                    <label for="filterArticle">Статья</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterTask" value="task" onchange="applyFilters()">
+                    <label for="filterTask">Задание</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterLecture" value="lecture" onchange="applyFilters()">
+                    <label for="filterLecture">Лекция</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Расширение файла</span>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterWord" value="word" onchange="applyFilters()">
+                    <label for="filterWord">Word (.doc, .docx)</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterExcel" value="excel" onchange="applyFilters()">
+                    <label for="filterExcel">Excel (.xls, .xlsx)</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterPpt" value="ppt" onchange="applyFilters()">
+                    <label for="filterPpt">PowerPoint (.ppt, .pptx)</label>
+                </div>
+                <div class="filter-checkbox">
+                    <input type="checkbox" id="filterPdf" value="pdf" onchange="applyFilters()">
+                    <label for="filterPdf">PDF (.pdf)</label>
+                </div>
+            </div>
+
+            <button class="filter-reset" onclick="resetFilters()">Сбросить фильтры</button>
+        </div>
+    </div><!-- конец main -->
+
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal">
+            <button onclick="document.getElementById('uploadModal').classList.remove('open')" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">×</button>
+            <div class="modal-title">Загрузить файл</div>
+            <div class="modal-error" id="uploadError"></div>
+            <div class="field-label">Тег материала</div>
+            <select class="field-input" id="uploadTag">
+                <option value="">— Выберите тип документа —</option>
+                <option value="book">Книга / Учебник</option>
+                <option value="syllabus">Силлабус</option>
+                <option value="essay">Реферат</option>
+                <option value="template">Трафарет</option>
+                <option value="guide">Методичка</option>
+                <option value="article">Статья</option>
+                <option value="task">Задание</option>
+                <option value="lecture">Лекция</option>
+                <option value="other">Другое</option>
+            </select>
+            <div class="field-label">Файл</div>
+            <input type="file" class="field-input" id="uploadFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
+            <div style="font-size:11px;color:#aaa;margin-top:-10px;margin-bottom:14px;">PDF, Word, PowerPoint, Excel</div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="document.getElementById('uploadModal').classList.remove('open')">Отмена</button>
+                <button class="btn-upload" onclick="submitUpload()">Загрузить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка выбора файла -->
+    <div class="file-picker-overlay" id="filePickerModal" onclick="if(event.target===this)closeFilePicker()">
+        <div class="file-picker-modal">
+            <div class="file-picker-header">
+                <div class="file-picker-title">Прикрепить файл</div>
+                <button onclick="closeFilePicker()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;">×</button>
+            </div>
+            <div class="file-picker-body">
+                <div class="file-picker-left">
+                    <div style="font-size:13px;font-weight:600;color:#111;margin-bottom:12px;">Из библиотеки</div>
+                    <input type="text" class="file-picker-search" id="librarySearchInput" placeholder="Поиск по названию..." oninput="searchLibrary(this.value)">
+                    <div class="file-picker-list" id="libraryPickerList">
+                        <div class="empty-state">Загрузка...</div>
+                    </div>
+                </div>
+                <div class="file-picker-right">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                    <div class="file-picker-right-title">С устройства</div>
+                    <div class="file-picker-right-sub">Загрузите файл с вашего компьютера</div>
+                    <button class="btn-pick-device" onclick="document.getElementById('deviceFileInput').click()">Выбрать файл</button>
+                    <input type="file" id="deviceFileInput" style="display:none;" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" multiple onchange="handleDeviceFiles(this)">
+                </div>
+            </div>
+            <div class="file-picker-footer">
+                <div class="file-picker-footer-count" id="pickerSelectedCount">Ничего не выбрано</div>
+                <button class="btn-attach" onclick="attachSelected()">Прикрепить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка рассылки -->
+    <div class="broadcast-overlay" id="broadcastModal" onclick="if(event.target===this)closeBroadcast()">
+        <div class="broadcast-modal">
+            <div class="broadcast-title">Отправить в группы</div>
+            <div class="broadcast-sub">Выберите группы для отправки</div>
+            <div id="broadcastGroupList"></div>
+            <div class="broadcast-actions">
+                <button class="btn-broadcast-cancel" onclick="closeBroadcast()">Отмена</button>
+                <button class="btn-broadcast-send" onclick="confirmBroadcast()">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контекстное меню сообщения -->
+    <div id="msgContextMenu" style="display:none;position:fixed;background:#fff;border:1.5px solid #e8e8e8;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);z-index:500;min-width:160px;overflow:hidden;">
+        <div onclick="openEditModal()" style="padding:10px 16px;font-size:13px;color:#111;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.1s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+            Редактировать
+        </div>
+        <div style="height:1px;background:#f0f0f0;"></div>
+        <div onclick="confirmDeleteMessage()" style="padding:10px 16px;font-size:13px;color:#e53935;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background 0.1s;" onmouseover="this.style.background='#fff5f5'" onmouseout="this.style.background='transparent'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+            Удалить
+        </div>
+    </div>
+
+    <!-- Модалка редактирования сообщения -->
+    <div class="modal-overlay" id="editMessageModal">
+        <div class="modal" style="max-width:420px;">
+            <button onclick="closeEditModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;">×</button>
+            <div class="modal-title">Редактировать сообщение</div>
+            <textarea id="editMessageText" style="width:100%;padding:10px 12px;border:1.5px solid #e8e8e8;border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;margin-bottom:16px;" placeholder="Текст сообщения..."></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeEditModal()">Отмена</button>
+                <button class="btn-upload" onclick="submitEditMessage()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="sidebar.js"></script>
+    <script>
+        const API = `${window.location.origin}/api`;
+        const userId = parseInt(localStorage.getItem('userId'));
+        const role = localStorage.getItem('userRole');
+
+        // ── ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ──
+        let allFiles = [];
+        let activeFilters = { docTypes: [], extensions: [] };
+        let currentSubject = null;
+        let studentGroupName = null;
+        let selectedGroup = null;
+        let selectedCycle = null;
+        let teacherGroups = [];
+        let teacherData = null;
+        let selectedSubject = null;
+        let pendingAttachments = [];
+        let libraryBooks = [];
+        let allLibraryBooks = [];
+
+        // ── ГЛОБАЛЬНЫЕ ФУНКЦИИ КОНТЕКСТНОГО МЕНЮ ──
+        let contextMessageId = null;
+        let contextMessageText = null;
+
+        window.showMessageContext = function (e, id, text) {
+            e.preventDefault();
+            contextMessageId = id;
+            contextMessageText = text;
+            const menu = document.getElementById('msgContextMenu');
+            menu.style.display = 'block';
+            menu.style.left = e.clientX + 'px';
+            menu.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                document.addEventListener('click', () => { menu.style.display = 'none'; }, { once: true });
+            }, 10);
+        };
+
+        window.openEditModal = function () {
+            document.getElementById('msgContextMenu').style.display = 'none';
+            document.getElementById('editMessageText').value = contextMessageText || '';
+            document.getElementById('editMessageModal').classList.add('open');
+        };
+
+        window.closeEditModal = function () {
+            document.getElementById('editMessageModal').classList.remove('open');
+        };
+
+        window.submitEditMessage = async function () {
+            const newText = document.getElementById('editMessageText').value.trim();
+            if (!newText) { showAlert('Введите текст', 'warning'); return; }
+            const res = await fetch(`${API}/fileexchange/${contextMessageId}/message?userId=${userId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ MessageText: newText })
+            });
+            if (res.ok) {
+                window.closeEditModal();
+                showAlert('Сообщение обновлено', 'success');
+                await loadTeacherChat(selectedGroup, selectedSubject);
+            } else {
+                showAlert('Ошибка обновления', 'error');
+            }
+        };
+
+        window.confirmDeleteMessage = function () {
+            document.getElementById('msgContextMenu').style.display = 'none';
+            showConfirm('Удалить это сообщение?', async () => {
+                const res = await fetch(`${API}/fileexchange/${contextMessageId}?userId=${userId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showAlert('Сообщение удалено', 'success');
+                    await loadTeacherChat(selectedGroup, selectedSubject);
+                } else {
+                    showAlert('Ошибка удаления', 'error');
+                }
+            });
+        };
+
+        // ── ИНИЦИАЛИЗАЦИЯ ──
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!role) { window.location.href = 'eduhub-login.html'; return; }
+            renderSidebar('files');
+            if (role === 'student') loadStudentView();
+            else if (role === 'teacher') loadTeacherView();
+            else {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Файлообменник доступен только для студентов и преподавателей.</div>';
+            }
+
+            document.addEventListener('input', (e) => {
+                if (e.target.id === 'chatInputText') updateChatActionBtn();
+            });
+        });
+
+        // ── СТУДЕНТ ──
+        let unreadItems = [];
+
+        async function loadUnread() {
+            const res = await fetch(`${API}/fileexchange/unread?userId=${userId}`);
+            if (!res.ok) return;
+            unreadItems = await res.json();
+        }
+
+        async function markRead(groupName, cycleNumber, subjectName) {
+            await fetch(`${API}/fileexchange/mark-read?userId=${userId}&groupName=${encodeURIComponent(groupName)}&cycleNumber=${cycleNumber}&subjectName=${encodeURIComponent(subjectName)}`, {
+                method: 'POST'
+            });
+            unreadItems = unreadItems.filter(u => !(u.cycleNumber === cycleNumber && u.subjectName === subjectName));
+            updateUnreadDots();
+        }
+
+        function updateUnreadDots() {
+            // Сайдбар
+            const sidebarLink = document.querySelector('a.nav-item[href="files.html"]');
+            if (sidebarLink) {
+                sidebarLink.querySelector('.nav-dot')?.remove();
+                if (unreadItems.length > 0) {
+                    sidebarLink.insertAdjacentHTML('beforeend', '<span class="nav-dot"></span>');
+                }
+            }
+
+            // Вкладки циклов
+            [1, 2, 3, 4, 5].forEach(c => {
+                const btn = document.querySelector(`#cycleTabs .cycle-tab[data-cycle="${c}"]`);
+                if (!btn) return;
+                const hasDot = unreadItems.some(u => u.cycleNumber === c);
+                btn.querySelector('.tab-dot')?.remove();
+                if (hasDot) btn.insertAdjacentHTML('beforeend', '<span class="tab-dot"></span>');
+            });
+
+            // Вкладки предметов
+            if (window._studentSubjects) {
+                window._studentSubjects.forEach((s, i) => {
+                    const btn = document.querySelector(`#subjectTabs .cycle-tab[data-subject="${i}"]`);
+                    if (!btn) return;
+                    const hasDot = unreadItems.some(u => u.subjectName === s.subjectName && u.cycleNumber === selectedCycle);
+                    btn.querySelector('.tab-dot')?.remove();
+                    if (hasDot) btn.insertAdjacentHTML('beforeend', '<span class="tab-dot"></span>');
+                });
+            }
+        }
+
+        async function loadStudentView() {
+            const res = await fetch(`${API}/fileexchange/student?userId=${userId}`);
+            if (!res.ok) { document.getElementById('mainContent').innerHTML = '<div class="empty-state">Ошибка загрузки</div>'; return; }
+            const data = await res.json();
+
+            if (data.hasGroup === false) {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Вы не привязаны к группе. Обратитесь к администратору.</div>';
+                return;
+            }
+            if (data.hasSemester === false) {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Семестр не загружен. Обратитесь к администратору.</div>';
+                return;
+            }
+            if (data.hasToday === false) {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Сегодняшний день не найден в календаре семестра.</div>';
+                return;
+            }
+            if (data.isWorkday === false) {
+                const labels = { 'В': 'Выходной день', 'П': 'Государственный праздник', 'ЧС': 'Сегодня нет занятий — преподаватель проверяет работы' };
+                document.getElementById('mainContent').innerHTML = `<div class="empty-state">${labels[data.dayType] || 'Нерабочий день'}</div>`;
+                return;
+            }
+
+            document.getElementById('filtersPanel').style.display = 'block';
+            selectedCycle = data.cycleNumber;
+            studentGroupName = data.groupName;
+            currentSubject = data.subjects[0]?.subjectName || null;
+
+            if (data.subjects.length > 1 && currentSubject) {
+                const res2 = await fetch(`${API}/fileexchange/files?userId=${userId}&groupName=${encodeURIComponent(data.groupName)}&cycleNumber=${data.cycleNumber}&subjectName=${encodeURIComponent(currentSubject)}`);
+                const filteredFiles = res2.ok ? await res2.json() : [];
+                renderStudentView(data, data.subjects[0], filteredFiles);
+                await loadUnread();
+                updateUnreadDots();
+            } else {
+                if (!data.subjects || !data.subjects.length) {
+                    document.getElementById('mainContent').innerHTML = '<div class="empty-state">Нет предметов в расписании</div>';
+                    return;
+                }
+                renderStudentView(data, data.subjects[0], data.files);
+            }
+        }
+
+        function renderStudentView(data, activeSubjectObj, files) {
+            window._studentSubjects = data.subjects;
+            const dayLabel = getDayLabel(data.dayType);
+            const badgeClass = getDayBadgeClass(data.dayType);
+            const hasMultipleSubjects = data.subjects.length > 1;
+
+            document.getElementById('mainContent').innerHTML = `
+            <div class="context-bar">
+                <div class="context-left">
+                    <div class="context-subject">${activeSubjectObj.subjectName}</div>
+                    <div class="context-details">
+                        <span>${activeSubjectObj.teacherName}</span>
+                        <span class="context-dot">·</span>
+                        <span>${activeSubjectObj.building} ${activeSubjectObj.roomNumber}</span>
+                        <span class="context-dot">·</span>
+                        <span>${activeSubjectObj.startTime}</span>
+                    </div>
+                </div>
+                <div class="context-right">
+                    <div class="context-day-label">День ${data.dayType}</div>
+                    <div class="context-badge ${badgeClass}">${dayLabel}</div>
+                </div>
+            </div>
+
+            <div class="files-section">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;">
+                    <div class="cycle-tabs" id="cycleTabs">
+                       ${[1, 2, 3, 4, 5].map(c => `<button class="cycle-tab ${c === data.cycleNumber ? 'active' : ''}" data-cycle="${c}" onclick="loadStudentFiles('${data.groupName}', ${c}, this)">Цикл ${c}</button>`).join('')}
+                    </div>
+                    ${hasMultipleSubjects ? `
+                    <div class="cycle-tabs" id="subjectTabs">
+                        ${data.subjects.map((s, i) => `
+                            <button class="cycle-tab ${s.subjectName === activeSubjectObj.subjectName ? 'active' : ''}" data-subject="${i}"
+                                onclick="switchSubject(${JSON.stringify(data).replace(/"/g, '&quot;')}, ${i}, this)">
+                                Предмет ${i + 1}
+                        </button>`).join('')}
+                    </div>
+                    ` : ''}
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state">Загрузка...</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            renderChat(files);
+            setTimeout(adjustChatHeight, 50);
+        }
+
+        async function switchSubject(data, subjectIndex, btn) {
+            document.querySelectorAll('#subjectTabs .cycle-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            const activeSubjectObj = data.subjects[subjectIndex];
+            currentSubject = activeSubjectObj.subjectName;
+
+            const res = await fetch(`${API}/fileexchange/files?userId=${userId}&groupName=${encodeURIComponent(studentGroupName)}&cycleNumber=${selectedCycle}&subjectName=${encodeURIComponent(currentSubject)}`);
+            const files = res.ok ? await res.json() : [];
+
+            document.querySelector('.context-subject').textContent = activeSubjectObj.subjectName;
+            document.querySelector('.context-details').innerHTML = `
+                <span>${activeSubjectObj.teacherName}</span>
+                <span class="context-dot">·</span>
+                <span>${activeSubjectObj.building} ${activeSubjectObj.roomNumber}</span>
+                <span class="context-dot">·</span>
+                <span>${activeSubjectObj.startTime}</span>
+            `;
+            renderChat(files);
+            await markRead(studentGroupName, selectedCycle, currentSubject);
+            updateUnreadDots();
+        }
+
+        async function loadStudentFiles(groupName, cycle, btn) {
+            document.querySelectorAll('#cycleTabs .cycle-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            selectedCycle = cycle;
+
+            const res = await fetch(`${API}/fileexchange/student?userId=${userId}&selectedCycle=${cycle}`);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            currentSubject = data.subjects?.[0]?.subjectName || null;
+            window._studentSubjects = data.subjects || [];
+
+            // Обновить контекст предмета
+            if (data.subjects && data.subjects.length > 0) {
+                const s = data.subjects[0];
+                document.querySelector('.context-subject').textContent = s.subjectName;
+                document.querySelector('.context-details').innerHTML = `
+            <span>${s.teacherName}</span>
+            <span class="context-dot">·</span>
+            <span>${s.building} ${s.roomNumber}</span>
+            <span class="context-dot">·</span>
+            <span>${s.startTime}</span>`;
+            } else {
+                document.querySelector('.context-subject').textContent = '—';
+                document.querySelector('.context-details').innerHTML = 'Нет предметов в этом цикле';
+            }
+
+            // Обновить кнопки предметов
+            const subjectTabsEl = document.getElementById('subjectTabs');
+            if (subjectTabsEl) {
+                if (data.subjects && data.subjects.length > 1) {
+                    subjectTabsEl.innerHTML = data.subjects.map((s, i) => `
+                    <button class="cycle-tab ${i === 0 ? 'active' : ''}" data-subject="${i}"
+                    onclick="switchSubject(${JSON.stringify(data).replace(/"/g, '&quot;')}, ${i}, this)">
+                    Предмет ${i + 1}
+                    </button>`).join('');
+                    subjectTabsEl.style.display = '';
+                } else {
+                    subjectTabsEl.innerHTML = '';
+                    subjectTabsEl.style.display = 'none';
+                }
+            }
+
+            // Загрузить файлы
+            let url = `${API}/fileexchange/files?userId=${userId}&groupName=${encodeURIComponent(groupName)}&cycleNumber=${cycle}`;
+            if (currentSubject) url += `&subjectName=${encodeURIComponent(currentSubject)}`;
+            const res2 = await fetch(url);
+            const files = res2.ok ? await res2.json() : [];
+            renderChat(files);
+            await markRead(groupName, cycle, currentSubject);
+            updateUnreadDots();
+        }
+
+        // ── ПРЕПОДАВАТЕЛЬ ──
+
+        async function loadTeacherView() {
+            const res = await fetch(`${API}/fileexchange/teacher?userId=${userId}`);
+            if (!res.ok) { document.getElementById('mainContent').innerHTML = '<div class="empty-state">Ошибка загрузки</div>'; return; }
+            const data = await res.json();
+
+            if (!data.hasSemester) {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Семестр не загружен.</div>';
+                return;
+            }
+            if (!data.groups.length) {
+                document.getElementById('mainContent').innerHTML = '<div class="empty-state">Вы не найдены в расписании. Убедитесь что ваше ФИО совпадает с данными на платформе.</div>';
+                return;
+            }
+
+            teacherData = data;
+            selectedCycle = data.cycleNumber;
+            document.getElementById('teacherSidebar').classList.add('visible');
+
+            document.getElementById('mainContent').innerHTML = `
+            <div class="context-bar">
+                <div class="context-left">
+                    <div class="context-subject" id="teacherContextSubject">Выберите предмет и группу</div>
+                    <div class="context-details" id="teacherContextDetails">
+                        <span>Выберите группу из панели справа</span>
+                    </div>
+                </div>
+                <div class="context-right">
+                    <div class="context-day-label" id="teacherDayLabel">День ${data.todayDayType}</div>
+                    <div class="context-badge ${getDayBadgeClass(data.todayDayType)}">${getDayLabel(data.todayDayType)}</div>
+                </div>
+            </div>
+
+            <div class="cycle-tabs" id="teacherCycleTabsMain" style="margin-bottom:20px;">
+                ${[1, 2, 3, 4, 5].map(c => `<button class="cycle-tab ${c === data.cycleNumber ? 'active' : ''}" onclick="switchTeacherCycle(${c}, this)">Цикл ${c}</button>`).join('')}
+            </div>
+
+            <div class="chat-container" id="teacherChat">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="empty-state">Выберите группу для просмотра чата</div>
+                </div>
+                <div class="chat-input-area">
+                    <div class="chat-attachments-preview" id="attachmentsPreview"></div>
+                    <div class="chat-input-row">
+                        <textarea class="chat-input-text" id="chatInputText" placeholder="Добавьте комментарий к загрузке файлов..." rows="1"></textarea>
+                        <button class="btn-chat-action" id="chatActionBtn" onclick="onChatActionClick()">
+                            <svg id="chatActionIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+            renderSubjectList(data.groups);
+            const chatInput = document.getElementById('chatInputText');
+            if (chatInput && !chatInput._enterBound) {
+                chatInput._enterBound = true;
+                chatInput.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        onChatActionClick();
+                    }
+                });
+            }
+            setTimeout(adjustChatHeight, 50);
+        }
+
+        function renderSubjectList(groups) {
+            const subjectMap = {};
+            groups.forEach(g => {
+                if (!subjectMap[g.subjectName]) subjectMap[g.subjectName] = [];
+                subjectMap[g.subjectName].push(g);
+            });
+
+            const subjectList = document.getElementById('teacherSubjectList');
+            if (!Object.keys(subjectMap).length) {
+                subjectList.innerHTML = '<div style="font-size:12px;color:#aaa;text-align:center;padding:16px 0;">Нет групп в этом цикле</div>';
+                return;
+            }
+
+            subjectList.innerHTML = Object.entries(subjectMap).map(([subject, gs], i) => `
+            <div class="subject-item">
+                <div class="subject-header ${i === 0 ? 'open' : ''}" onclick="toggleSubject(this)">
+                    <span>${subject}</span>
+                    <span class="subject-arrow">▼</span>
+                </div>
+                <div class="subject-groups ${i === 0 ? 'open' : ''}">
+                    ${gs.map(g => `
+                        <button class="group-btn" onclick="selectTeacherGroup('${g.groupName}', '${subject}', '${g.teacherName}', '${g.building}', '${g.roomNumber}', '${g.startTime.substring(0, 5)}', this)">
+                            ${g.groupName}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function toggleSubject(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+        }
+
+        async function switchTeacherCycle(cycle, btn) {
+            selectedCycle = cycle;
+            selectedGroup = null;
+            selectedSubject = null;
+
+            document.querySelectorAll('#teacherCycleTabsMain .cycle-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const res = await fetch(`${API}/fileexchange/teacher?userId=${userId}&cycleNumber=${cycle}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            teacherData = data;
+            renderSubjectList(data.groups);
+
+            document.getElementById('teacherContextSubject').textContent = 'Выберите предмет и группу';
+            document.getElementById('teacherContextDetails').innerHTML = '<span>Выберите группу из панели справа</span>';
+            document.getElementById('chatMessages').innerHTML = '<div class="empty-state">Выберите группу для просмотра чата</div>';
+            pendingAttachments = [];
+            renderAttachmentsPreview();
+            updateChatActionBtn();
+        }
+
+        async function selectTeacherGroup(groupName, subjectName, teacherName, building, room, startTime, btn) {
+            document.querySelectorAll('.group-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedGroup = groupName;
+            selectedSubject = subjectName;
+
+            document.getElementById('teacherContextSubject').textContent = subjectName;
+            document.getElementById('teacherContextDetails').innerHTML = `
+            <span>${groupName}</span>
+            <span class="context-dot">·</span>
+            <span>${building} ${room}</span>
+            <span class="context-dot">·</span>
+            <span>${startTime}</span>
+        `;
+
+            await loadTeacherChat(groupName, subjectName);
+        }
+
+        async function loadTeacherChat(groupName, subjectName) {
+            const res = await fetch(`${API}/fileexchange/files?userId=${userId}&groupName=${encodeURIComponent(groupName)}&cycleNumber=${selectedCycle}&subjectName=${encodeURIComponent(subjectName)}`);
+            if (!res.ok) return;
+            const files = await res.json();
+            renderChat(files);
+        }
+
+        function formatDateSeparator(dateStr) {
+            const d = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+
+            if (d.toDateString() === today.toDateString()) return 'Сегодня';
+            if (d.toDateString() === yesterday.toDateString()) return 'Вчера';
+            return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+        }
+
+        function renderChat(messages) {
+            const el = document.getElementById('chatMessages');
+            if (!messages.length) {
+                el.innerHTML = '<div class="empty-state">Сообщений пока нет</div>';
+                return;
+            }
+
+            const sorted = [...messages].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            let lastDate = null;
+            let html = '';
+
+            sorted.forEach(m => {
+                const msgDate = new Date(m.createdAt).toDateString();
+                if (msgDate !== lastDate) {
+                    lastDate = msgDate;
+                    html += `<div class="chat-date-separator"><span>${formatDateSeparator(m.createdAt)}</span></div>`;
+                }
+                html += `
+        <div class="chat-message" id="msg_${m.id}">
+            <div class="chat-message-header" oncontextmenu="showMessageContext(event, ${m.id}, \`${(m.messageText || '').replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`)">
+                ${m.uploaderName} · ${new Date(m.createdAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+            <div class="chat-message-body" oncontextmenu="showMessageContext(event, ${m.id}, \`${(m.messageText || '').replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`)">
+                ${m.messageText ? `<div class="chat-message-text">${m.messageText}</div>` : ''}
+                ${m.fileName ? `
+                <div class="chat-file-item" onclick="downloadFile(${m.id})">
+                    <div class="chat-file-icon ${getFileIconClass(m.fileName)}" style="width:28px;height:28px;font-size:9px;">${getFileExt(m.fileName)}</div>
+                    <div>
+                        <div class="chat-file-name">${m.fileName}</div>
+                        ${m.fileSize ? `<div class="chat-file-size">${(m.fileSize / 1024).toFixed(0)} КБ</div>` : ''}
+                    </div>
+                </div>` : ''}
+            </div>
+        </div>`;
+            });
+
+            el.innerHTML = html;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // ── ОБЩЕЕ ──
+
+        function renderFileList(files, canDelete) {
+            allFiles = files;
+            renderFilteredList(canDelete);
+        }
+
+        function renderFilteredList(canDelete) {
+            const list = document.getElementById('filesList');
+            if (!list) return;
+
+            let filtered = filterFiles(allFiles);
+
+            if (!filtered.length) {
+                list.innerHTML = '<div class="empty-state">Файлов не найдено</div>';
+                return;
+            }
+
+            list.innerHTML = `<div class="file-list">${filtered.map(f => `
+            <div class="file-item">
+                <div class="file-icon ${getFileIconClass(f.fileName)}">${getFileExt(f.fileName)}</div>
+                <div class="file-info">
+                    <div class="file-name">${f.fileName || 'Файл'}</div>
+                    <div class="file-meta">${f.uploaderName} · ${new Date(f.createdAt).toLocaleDateString('ru-RU')}</div>
+                </div>
+                ${f.tag ? `<span class="file-tag">${f.tag}</span>` : ''}
+                <button class="btn-download" onclick="downloadFile(${f.id})">Скачать</button>
+                ${canDelete ? `<button class="btn-delete-file" onclick="deleteFile(${f.id})">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                </button>` : ''}
+            </div>
+        `).join('')}</div>`;
+        }
+
+        async function downloadFile(id) {
+            window.location.href = `${API}/fileexchange/${id}/download`;
+        }
+
+        async function deleteFile(id) {
+            showConfirm('Удалить этот файл?', async () => {
+                const res = await fetch(`${API}/fileexchange/${id}?userId=${userId}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showAlert('Файл удалён', 'success');
+                    const card = document.querySelector('.group-card.active');
+                    if (card) card.click();
+                } else showAlert('Ошибка удаления', 'error');
+            });
+        }
+
+        function getFileExt(name) {
+            if (!name) return '?';
+            return name.split('.').pop().toUpperCase();
+        }
+
+        function getFileIconClass(name) {
+            if (!name) return 'icon-other';
+            const ext = name.split('.').pop().toLowerCase();
+            if (ext === 'pdf') return 'icon-pdf';
+            if (['doc', 'docx'].includes(ext)) return 'icon-word';
+            if (['xls', 'xlsx'].includes(ext)) return 'icon-excel';
+            if (['ppt', 'pptx'].includes(ext)) return 'icon-ppt';
+            return 'icon-other';
+        }
+
+        function getDayLabel(type) {
+            if (/^\d+$/.test(type)) return `День ${type}`;
+            const labels = { 'ЧР1/8': 'Рубежный экзамен 1', 'ЧР1/9': 'Рубежный экзамен 1', 'ЧР2/17': 'Рубежный экзамен 2', 'ЧР2/18': 'Рубежный экзамен 2', 'КИН': 'Консультация', 'ИН': 'Экзамен', 'ЧС': 'Нет занятий', 'В': 'Выходной', 'П': 'Праздник' };
+            return labels[type] || type;
+        }
+
+        function getDayBadgeClass(type) {
+            if (/^\d+$/.test(type)) return 'badge-workday';
+            if (type.includes('ЧР')) return 'badge-exam';
+            if (type === 'КИН') return 'badge-consult';
+            if (type === 'ИН') return 'badge-exam';
+            return 'badge-weekend';
+        }
+
+        // ── ФИЛЬТРАЦИЯ ──
+
+        function filterFiles(files) {
+            let result = files;
+
+            const tagMap = {
+                'book': ['book', 'книга', 'учебник', 'книга / учебник'],
+                'syllabus': ['syllabus', 'силлабус', 'силабус'],
+                'essay': ['essay', 'реферат'],
+                'template': ['template', 'трафарет'],
+                'guide': ['guide', 'методичка'],
+                'article': ['article', 'статья'],
+                'task': ['task', 'задание', 'образец срс'],
+                'lecture': ['lecture', 'лекция']
+            };
+
+            if (activeFilters.docTypes.length > 0) {
+                result = result.filter(f => {
+                    if (!f.tag) return false;
+                    const tagLower = f.tag.toLowerCase();
+                    for (let type of activeFilters.docTypes) {
+                        const variants = tagMap[type] || [type];
+                        if (variants.includes(tagLower)) return true;
+                    }
+                    return false;
+                });
+            }
+
+            if (activeFilters.extensions.length > 0) {
+                result = result.filter(f => {
+                    if (!f.fileName) return false;
+                    const ext = f.fileName.split('.').pop().toLowerCase();
+                    for (let filter of activeFilters.extensions) {
+                        if (filter === 'word' && ['doc', 'docx'].includes(ext)) return true;
+                        if (filter === 'excel' && ['xls', 'xlsx'].includes(ext)) return true;
+                        if (filter === 'ppt' && ['ppt', 'pptx'].includes(ext)) return true;
+                        if (filter === 'pdf' && ext === 'pdf') return true;
+                    }
+                    return false;
+                });
+            }
+
+            return result;
+        }
+
+        function applyFilters() {
+            activeFilters.docTypes = [];
+            ['book', 'syllabus', 'essay', 'template', 'guide', 'article', 'task', 'lecture'].forEach(type => {
+                const checkbox = document.getElementById('filter' + type.charAt(0).toUpperCase() + type.slice(1));
+                if (checkbox && checkbox.checked) activeFilters.docTypes.push(type);
+            });
+
+            activeFilters.extensions = [];
+            ['word', 'excel', 'ppt', 'pdf'].forEach(ext => {
+                const checkbox = document.getElementById('filter' + ext.charAt(0).toUpperCase() + ext.slice(1));
+                if (checkbox && checkbox.checked) activeFilters.extensions.push(ext);
+            });
+
+            const canDelete = role === 'teacher';
+            renderFilteredList(canDelete);
+        }
+
+        function resetFilters() {
+            document.querySelectorAll('.filter-checkbox input[type="checkbox"]').forEach(cb => cb.checked = false);
+            activeFilters.docTypes = [];
+            activeFilters.extensions = [];
+            const canDelete = role === 'teacher';
+            renderFilteredList(canDelete);
+        }
+
+        // ── КНОПКА ДЕЙСТВИЯ (+ / самолётик) ──
+
+        function onChatActionClick() {
+            if (pendingAttachments.length > 0 || document.getElementById('chatInputText').value.trim()) {
+                const subjectGroups = teacherData?.groups?.filter(g => g.subjectName === selectedSubject) || [];
+                if (subjectGroups.length <= 1) {
+                    // Одна группа — отправляем сразу без модалки рассылки
+                    const groupNames = selectedGroup;
+                    sendDirectly(groupNames);
+                } else {
+                    openBroadcast();
+                }
+            } else {
+                openFilePicker();
+            }
+        }
+
+        async function sendDirectly(groupNames) {
+            const messageText = document.getElementById('chatInputText').value.trim();
+
+            try {
+                const deviceFiles = pendingAttachments.filter(a => a.type === 'device');
+                for (const att of deviceFiles) {
+                    const fd = new FormData();
+                    fd.append('GroupNames', groupNames);
+                    fd.append('CycleNumber', selectedCycle);
+                    fd.append('SubjectName', selectedSubject);
+                    fd.append('MessageText', messageText);
+                    fd.append('IsLibraryRef', 'false');
+                    fd.append('File', att.file);
+                    await fetch(`${API}/fileexchange/broadcast?userId=${userId}`, { method: 'POST', body: fd });
+                }
+
+                const libraryFiles = pendingAttachments.filter(a => a.type === 'library');
+                for (const att of libraryFiles) {
+                    await fetch(`${API}/fileexchange/send-library-ref?userId=${userId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            GroupNames: groupNames,
+                            CycleNumber: selectedCycle,
+                            SubjectName: selectedSubject,
+                            MessageText: messageText,
+                            LibraryBookId: att.libraryBookId
+                        })
+                    });
+                }
+
+                if (!pendingAttachments.length && messageText) {
+                    const fd = new FormData();
+                    fd.append('GroupNames', groupNames);
+                    fd.append('CycleNumber', selectedCycle);
+                    fd.append('SubjectName', selectedSubject);
+                    fd.append('MessageText', messageText);
+                    fd.append('IsLibraryRef', 'false');
+                    await fetch(`${API}/fileexchange/broadcast?userId=${userId}`, { method: 'POST', body: fd });
+                }
+
+                pendingAttachments = [];
+                document.getElementById('chatInputText').value = '';
+                renderAttachmentsPreview();
+                updateChatActionBtn();
+                showAlert('Отправлено', 'success');
+                await loadTeacherChat(selectedGroup, selectedSubject);
+            } catch (e) {
+                showAlert('Ошибка отправки', 'error');
+            }
+        }
+
+        function updateChatActionBtn() {
+            const hasContent = pendingAttachments.length > 0 || document.getElementById('chatInputText')?.value.trim();
+            const icon = document.getElementById('chatActionIcon');
+            if (!icon) return;
+            if (hasContent) {
+                icon.innerHTML = '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>';
+            } else {
+                icon.innerHTML = '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
+            }
+        }
+
+        // ── ПИКЕР ФАЙЛОВ ──
+
+        function openFilePicker() {
+            if (!selectedGroup) { showAlert('Выберите группу', 'warning'); return; }
+            document.getElementById('filePickerModal').classList.add('open');
+            loadLibraryForPicker();
+        }
+
+        function closeFilePicker() {
+            document.getElementById('filePickerModal').classList.remove('open');
+        }
+
+        async function loadLibraryForPicker() {
+            const list = document.getElementById('libraryPickerList');
+            list.innerHTML = '<div class="empty-state">Загрузка...</div>';
+            const res = await fetch(`${API}/library?userId=${userId}`);
+            if (!res.ok) { list.innerHTML = '<div class="empty-state">Ошибка загрузки</div>'; return; }
+            allLibraryBooks = await res.json();
+            allLibraryBooks = allLibraryBooks.filter(b => b.approved);
+            renderLibraryPicker(allLibraryBooks);
+        }
+
+        function renderLibraryPicker(books) {
+            const list = document.getElementById('libraryPickerList');
+            if (!books.length) {
+                list.innerHTML = '<div class="empty-state">Ничего не найдено</div>';
+                return;
+            }
+            list.innerHTML = books.map(b => `
+            <div class="file-picker-item ${pendingAttachments.find(a => a.libraryBookId === b.id) ? 'selected' : ''}"
+                onclick="toggleLibraryBook(${b.id}, '${b.title.replace(/'/g, "\\'")}', ${b.fileSize || 0}, this)">
+                <div class="file-picker-item-info">
+                    <div class="file-picker-item-title">${b.title}</div>
+                    <div class="file-picker-item-sub">${b.author || '—'} · ${b.documentType || '—'}</div>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${pendingAttachments.find(a => a.libraryBookId === b.id) ? '#111' : '#ccc'}" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+        `).join('');
+            updatePickerCount();
+        }
+
+        function toggleLibraryBook(bookId, title, fileSize, el) {
+            const existing = pendingAttachments.findIndex(a => a.libraryBookId === bookId);
+            if (existing >= 0) {
+                pendingAttachments.splice(existing, 1);
+                el.classList.remove('selected');
+                el.querySelector('svg').setAttribute('stroke', '#ccc');
+            } else {
+                pendingAttachments.push({ type: 'library', libraryBookId: bookId, name: title, fileSize });
+                el.classList.add('selected');
+                el.querySelector('svg').setAttribute('stroke', '#111');
+            }
+            updatePickerCount();
+        }
+
+        function searchLibrary(query) {
+            const filtered = allLibraryBooks.filter(b =>
+                b.title.toLowerCase().includes(query.toLowerCase()) ||
+                (b.author && b.author.toLowerCase().includes(query.toLowerCase()))
+            );
+            renderLibraryPicker(filtered);
+        }
+
+        function handleDeviceFiles(input) {
+            Array.from(input.files).forEach(file => {
+                if (!pendingAttachments.find(a => a.name === file.name && a.type === 'device')) {
+                    pendingAttachments.push({ type: 'device', file, name: file.name, fileSize: file.size });
+                }
+            });
+            input.value = '';
+            updatePickerCount();
+        }
+
+        function updatePickerCount() {
+            const count = pendingAttachments.length;
+            document.getElementById('pickerSelectedCount').textContent = count ? `Выбрано файлов: ${count}` : 'Ничего не выбрано';
+        }
+
+        function attachSelected() {
+            closeFilePicker();
+            renderAttachmentsPreview();
+            updateChatActionBtn();
+        }
+
+        function renderAttachmentsPreview() {
+            const preview = document.getElementById('attachmentsPreview');
+            if (!preview) return;
+            if (!pendingAttachments.length) { preview.innerHTML = ''; return; }
+            preview.innerHTML = pendingAttachments.map((a, i) => `
+            <div class="attachment-chip">
+                <span>${a.name}</span>
+                <span class="attachment-chip-remove" onclick="removeAttachment(${i})">×</span>
+            </div>
+        `).join('');
+        }
+
+        function removeAttachment(index) {
+            pendingAttachments.splice(index, 1);
+            renderAttachmentsPreview();
+            updateChatActionBtn();
+        }
+
+        // ── РАССЫЛКА ──
+
+        function openBroadcast() {
+            if (!selectedGroup) { showAlert('Выберите группу', 'warning'); return; }
+            const subjectGroups = teacherData.groups.filter(g => g.subjectName === selectedSubject);
+            const list = document.getElementById('broadcastGroupList');
+            list.innerHTML = subjectGroups.map(g => `
+            <div class="broadcast-group-item">
+                <input type="checkbox" id="bc_${g.groupName}" value="${g.groupName}" ${g.groupName === selectedGroup ? 'checked' : ''}>
+                <label class="broadcast-group-label" for="bc_${g.groupName}">${g.groupName}</label>
+            </div>
+        `).join('');
+            document.getElementById('broadcastModal').classList.add('open');
+        }
+
+        function closeBroadcast() {
+            document.getElementById('broadcastModal').classList.remove('open');
+        }
+
+        async function confirmBroadcast() {
+            const checked = Array.from(document.querySelectorAll('#broadcastGroupList input:checked')).map(cb => cb.value);
+            if (!checked.length) { showAlert('Выберите хотя бы одну группу', 'warning'); return; }
+
+            const messageText = document.getElementById('chatInputText').value.trim();
+            const groupNames = checked.join(',');
+
+            try {
+                const deviceFiles = pendingAttachments.filter(a => a.type === 'device');
+                for (const att of deviceFiles) {
+                    const fd = new FormData();
+                    fd.append('GroupNames', groupNames);
+                    fd.append('CycleNumber', selectedCycle);
+                    fd.append('SubjectName', selectedSubject);
+                    fd.append('MessageText', messageText);
+                    fd.append('IsLibraryRef', 'false');
+                    fd.append('File', att.file);
+                    await fetch(`${API}/fileexchange/broadcast?userId=${userId}`, { method: 'POST', body: fd });
+                }
+
+                const libraryFiles = pendingAttachments.filter(a => a.type === 'library');
+                for (const att of libraryFiles) {
+                    await fetch(`${API}/fileexchange/send-library-ref?userId=${userId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            GroupNames: groupNames,
+                            CycleNumber: selectedCycle,
+                            SubjectName: selectedSubject,
+                            MessageText: messageText,
+                            LibraryBookId: att.libraryBookId
+                        })
+                    });
+                }
+
+                if (!pendingAttachments.length && messageText) {
+                    const fd = new FormData();
+                    fd.append('GroupNames', groupNames);
+                    fd.append('CycleNumber', selectedCycle);
+                    fd.append('SubjectName', selectedSubject);
+                    fd.append('MessageText', messageText);
+                    fd.append('IsLibraryRef', 'false');
+                    await fetch(`${API}/fileexchange/broadcast?userId=${userId}`, { method: 'POST', body: fd });
+                }
+
+                closeBroadcast();
+                pendingAttachments = [];
+                document.getElementById('chatInputText').value = '';
+                renderAttachmentsPreview();
+                updateChatActionBtn();
+                showAlert('Отправлено', 'success');
+                await loadTeacherChat(selectedGroup, selectedSubject);
+            } catch (e) {
+                showAlert('Ошибка отправки', 'error');
+            }
+        }
+        function adjustChatHeight() {
+            const chat = document.querySelector('.chat-container');
+            if (!chat) return;
+            const rect = chat.getBoundingClientRect();
+            const footerHeight = 32;
+            chat.style.height = (window.innerHeight - rect.top - footerHeight) + 'px';
+        }
+
+        window.addEventListener('resize', adjustChatHeight);
+    </script>
+</body>
+</html>

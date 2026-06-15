@@ -1,0 +1,540 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Объявления</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+            .btn-add:hover {
+                background: #333;
+            }
+
+        .search-wrap {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+            .search-wrap svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                color: #aaa;
+            }
+
+            .search-wrap input {
+                width: 100%;
+                padding: 10px 14px 10px 38px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 9px;
+                font-size: 14px;
+                outline: none;
+                background: #fff;
+                transition: border-color 0.2s;
+            }
+
+                .search-wrap input:focus {
+                    border-color: #111;
+                }
+
+        .announcements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ann-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px 28px;
+            border: 1.5px solid #e8e8e8;
+            transition: box-shadow 0.2s;
+        }
+
+            .ann-card:hover {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            }
+
+        .ann-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .ann-card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+            line-height: 1.3;
+        }
+
+        .ann-card-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-pin {
+            padding: 6px 14px;
+            background: #fff;
+            color: #111;
+            border: 1.5px solid #111;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .btn-pin.pinned {
+                background: #111;
+                color: #fff;
+            }
+
+            .btn-pin svg {
+                width: 13px;
+                height: 13px;
+            }
+
+        .btn-del {
+            padding: 6px 14px;
+            background: #fff;
+            color: #e53935;
+            border: 1.5px solid #e53935;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-del:hover {
+                background: #fff5f5;
+            }
+
+        .ann-card-meta {
+            font-size: 12.5px;
+            color: #aaa;
+            margin-bottom: 14px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .ann-card-body {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .tag-pinned {
+            background: #111;
+            color: #fff;
+        }
+
+        .tag-new {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .tag-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+        }
+
+            .modal-close:hover {
+                color: #111;
+            }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .form-group input, .form-group textarea {
+                width: 100%;
+                padding: 9px 12px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+                transition: border-color 0.2s;
+            }
+
+                .form-group input:focus, .form-group textarea:focus {
+                    border-color: #111;
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 120px;
+            }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-submit:hover {
+                background: #333;
+            }
+
+        .tag-rejected {
+            background: #f8d7da;
+            color: #842029;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="page-header">
+            <div>
+                <div class="page-title">Объявления</div>
+                <div class="page-subtitle">Новости и важные сообщения института</div>
+            </div>
+            <button class="btn-add" id="addBtn" onclick="openAddModal()">+ Добавить</button>
+        </div>
+
+        <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            <input type="text" id="searchInput" placeholder="Поиск по заголовку или тексту..." oninput="filterAnnouncements()" />
+        </div>
+
+        <div class="announcements-list" id="annList">
+            <div class="empty-state">Загрузка...</div>
+        </div>
+    </main>
+
+    <!-- ADD MODAL -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('addModal')">×</button>
+            <div class="modal-title">Новое объявление</div>
+            <div class="form-group">
+                <label>Заголовок *</label>
+                <input type="text" id="annTitle" placeholder="Введите заголовок" />
+            </div>
+            <div class="form-group">
+                <label>Текст объявления *</label>
+                <textarea id="annBody" placeholder="Текст объявления..."></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitAnnouncement()">Отправить на модерацию</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="editAnnModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('editAnnModal')">×</button>
+            <div class="modal-title">Редактировать объявление</div>
+            <input type="hidden" id="editAnnId" />
+            <div class="form-group">
+                <label>Заголовок *</label>
+                <input type="text" id="editAnnTitle" />
+            </div>
+            <div class="form-group">
+                <label>Текст *</label>
+                <textarea id="editAnnBody"></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitEditAnn()">Переотправить на модерацию</button>
+        </div>
+    </div>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const role = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName');
+        const userSurname = localStorage.getItem('userSurname');
+        const userId = localStorage.getItem('userId');
+
+        let allAnnouncements = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!role) { window.location.href = 'eduhub-login.html'; return; }
+
+            renderSidebar('announcements');
+
+            if (role === 'student') {
+                document.getElementById('addBtn').style.display = 'none';
+            }
+
+            loadAnnouncements();
+        });
+
+        function roleLabel(r) {
+            const map = { student: 'Студент', teacher: 'Учитель', moderator: 'Модератор', admin: 'Администратор' };
+            return map[r] || r;
+        }
+
+        function isNew(dateStr) {
+            const days = (Date.now() - new Date(dateStr)) / (1000 * 60 * 60 * 24);
+            return days <= 3;
+        }
+
+        async function loadAnnouncements() {
+            const res = await fetch(`${API}/announcements?userId=${userId || ''}`);
+            allAnnouncements = await res.json();
+            renderAnnouncements(allAnnouncements);
+        }
+
+        function renderAnnouncements(list) {
+            const container = document.getElementById('annList');
+            if (!list.length) {
+                container.innerHTML = '<div class="empty-state">Объявлений пока нет</div>';
+                return;
+            }
+
+            const isMod = role === 'moderator' || role === 'admin';
+
+            container.innerHTML = list.map(a => `
+                    <div class="ann-card" id="ann-${a.id}">
+                      <div class="ann-card-header">
+                        <div>
+                          ${a.pinned ? '<span class="tag tag-pinned">Закреплено</span>' : ''}
+                          ${a.status === 'rejected' ? '<span class="tag tag-rejected">Отклонено</span>' : !a.approved ? '<span class="tag tag-pending">На рассмотрении</span>' : isNew(a.createdAt) ? '<span class="tag tag-new">Недавно добавлено</span>' : ''}
+                          ${a.status === 'rejected' && a.rejectReason ? `<div style="color:#842029;font-size:13px;margin-top:8px;">Причина: <strong>${a.rejectReason}</strong></div>` : ''}
+                          <div class="ann-card-title" style="margin-top:${a.pinned || !a.approved || isNew(a.createdAt) ? '8px' : '0'}">${a.title}</div>
+                        </div>
+                        ${isMod && a.approved ? `
+                          <div class="ann-card-actions">
+                            <button class="btn-pin ${a.pinned ? 'pinned' : ''}" id="pinBtn-${a.id}" onclick="togglePin(${a.id})">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                              ${a.pinned ? 'Открепить' : 'Закрепить'}
+                            </button>
+                            <button class="btn-del" onclick="deleteAnn(${a.id})">Удалить</button>
+                          </div>
+                        ` : ''}
+                      </div>
+                      <div class="ann-card-meta">
+                        <span>Автор: ${a.authorName || '—'} ${a.authorRole ? '(' + roleLabel(a.authorRole) + ')' : ''}</span>
+                        <span>${new Date(a.createdAt).toLocaleDateString('ru-RU')}</span>
+                        ${isMod && a.approvedByName ? `<span>Одобрил: ${a.approvedByName}</span>` : ''}
+                      </div>
+                      <div class="ann-card-body">${a.body}</div>
+                        ${a.status === 'rejected' ? `
+                        <div style="margin-top:14px;display:flex;gap:8px;">
+                        <button class="btn-add" onclick="openEditAnnModal(${a.id}, '${a.title.replace(/'/g, "\\'")}', '${a.body.replace(/'/g, "\\'")}')">Редактировать</button>
+                        <button class="btn-del" onclick="deleteAnn(${a.id})">Удалить</button>
+                    </div>
+                ` : ''}
+                    </div>
+                  `).join('');
+        }
+
+        function filterAnnouncements() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allAnnouncements.filter(a =>
+                a.title.toLowerCase().includes(search) || a.body.toLowerCase().includes(search)
+            );
+            renderAnnouncements(filtered);
+        }
+
+        async function togglePin(id) {
+            const res = await fetch(`${API}/announcements/${id}/pin`, { method: 'POST' });
+            if (res.ok) loadAnnouncements();
+        }
+
+        async function deleteAnn(id) {
+            showConfirm('Удалить это объявление?', async () => {
+                const res = await fetch(`${API}/announcements/${id}`, { method: 'DELETE' });
+                if (res.ok) { loadAnnouncements(); showAlert('Объявление удалено', 'success'); }
+                else showAlert('Ошибка удаления', 'error');
+            });
+        }
+
+        function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+        async function submitAnnouncement() {
+            const title = document.getElementById('annTitle').value.trim();
+            const body = document.getElementById('annBody').value.trim();
+            if (!title || !body) { showAlert('Заполните все поля', 'warning'); return; }
+
+            const res = await fetch(`${API}/announcements`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Title: title, Body: body, UserId: parseInt(userId) })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                closeModal('addModal');
+                document.getElementById('annTitle').value = '';
+                document.getElementById('annBody').value = '';
+                loadAnnouncements();
+                showAlert(data.message || 'Отправлено на модерацию', 'success');
+            } else {
+                showAlert(data.message || 'Ошибка', 'error');
+            }
+        }
+
+        function openEditAnnModal(id, title, body) {
+            document.getElementById('editAnnId').value = id;
+            document.getElementById('editAnnTitle').value = title;
+            document.getElementById('editAnnBody').value = body;
+            document.getElementById('editAnnModal').classList.add('open');
+        }
+
+        async function submitEditAnn() {
+            const id = document.getElementById('editAnnId').value;
+            const title = document.getElementById('editAnnTitle').value.trim();
+            const body = document.getElementById('editAnnBody').value.trim();
+
+            if (!title || !body) { showAlert('Заполните все поля', 'warning'); return; }
+
+            const res = await fetch(`${API}/announcements/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Title: title, Body: body })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                closeModal('editAnnModal');
+                loadAnnouncements();
+                showAlert(data.message, 'success');
+            } else {
+                showAlert(data.message || 'Ошибка', 'error');
+            }
+        }
+    </script>
+
+</body>
+</html>

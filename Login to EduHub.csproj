@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Login_to_EduHub</RootNamespace>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Include="wwwroot\announcements.html" />
+    <None Include="wwwroot\eduhub-login.html" />
+    <None Include="wwwroot\ideas.html" />
+    <None Include="wwwroot\library.html" />
+    <None Include="wwwroot\moderation.html" />
+    <None Include="wwwroot\sidebar.js" />
+  </ItemGroup>
+
+</Project>

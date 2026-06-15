@@ -1,0 +1,760 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Модерация</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .page-header-icon {
+            width: 52px;
+            height: 52px;
+            background: #111;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .page-header-icon svg {
+                width: 26px;
+                height: 26px;
+                color: #fff;
+            }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 5px;
+            width: fit-content;
+            margin-bottom: 28px;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #777;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            border: none;
+            background: none;
+        }
+
+            .tab:hover {
+                color: #111;
+            }
+
+            .tab.active {
+                background: #111;
+                color: #fff;
+                font-weight: 600;
+            }
+
+        /* CARDS */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mod-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 22px 24px;
+            border: 1.5px solid #e8e8e8;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .mod-card-info {
+            flex: 1;
+        }
+
+        .mod-card-type {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .mod-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .mod-card-meta {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.8;
+        }
+
+            .mod-card-meta span {
+                display: block;
+            }
+
+        .mod-card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-approve {
+            padding: 9px 20px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+            .btn-approve:hover {
+                background: #333;
+            }
+
+        .btn-reject {
+            padding: 9px 20px;
+            background: #fff;
+            color: #e53935;
+            border: 1.5px solid #e53935;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+            .btn-reject:hover {
+                background: #fff5f5;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-size: 14px;
+            background: #fff;
+            border-radius: 14px;
+            border: 1.5px solid #e8e8e8;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-size: 14px;
+            background: #fff;
+            border-radius: 14px;
+            border: 1.5px solid #e8e8e8;
+        }
+        .btn-secondary {
+            padding: 9px 20px;
+            background: #fff;
+            color: #111;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+
+            .btn-secondary:hover {
+                background: #f5f5f5;
+            }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 460px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+        }
+
+            .modal-close:hover {
+                color: #111;
+            }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .form-group textarea {
+                width: 100%;
+                padding: 9px 12px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+                resize: vertical;
+                min-height: 100px;
+                transition: border-color 0.2s;
+            }
+
+                .form-group textarea:focus {
+                    border-color: #111;
+                }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #e53935;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-submit:hover {
+                background: #c62828;
+            }
+        .dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            background: #e53935;
+            border-radius: 50%;
+            margin-left: 5px;
+            vertical-align: middle;
+            display: none;
+        }
+
+            .dot.visible {
+                display: inline-block;
+            }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 460px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+        }
+
+            .modal-close:hover {
+                color: #111;
+            }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .form-group textarea {
+                width: 100%;
+                padding: 9px 12px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+                resize: vertical;
+                min-height: 100px;
+                transition: border-color 0.2s;
+            }
+
+                .form-group textarea:focus {
+                    border-color: #111;
+                }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar-container"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="page-header">
+            <div class="page-header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+            </div>
+            <div>
+                <div class="page-title">Панель модерации</div>
+                <div class="page-subtitle">Проверка и одобрение материалов перед публикацией</div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" id="tab-library" onclick="switchTab('library')">Библиотека <span class="dot" id="dot-library"></span></button>
+            <button class="tab" id="tab-announcements" onclick="switchTab('announcements')">Объявления <span class="dot" id="dot-announcements"></span></button>
+            <button class="tab" id="tab-ideas" onclick="switchTab('ideas')">Идеи <span class="dot" id="dot-ideas"></span></button>
+        </div>
+
+        <!-- CONTENT -->
+        <div id="tabContent">
+            <div class="cards-list" id="cardsList">
+                <div class="empty-state">Загрузка...</div>
+            </div>
+        </div>
+    </main>
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeRejectModal()">×</button>
+            <div class="modal-title">Причина отклонения</div>
+            <div class="form-group">
+                <label>Напишите причину отклонения *</label>
+                <textarea id="rejectReason" placeholder="Например: недостаточно информации, неверный формат..."></textarea>
+            </div>
+            <button class="btn-submit" onclick="confirmReject()">Отклонить</button>
+        </div>
+    </div>
+    <div class="modal-overlay" id="approveModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('approveModal')">×</button>
+            <div class="modal-title">Одобрить идею</div>
+            <input type="hidden" id="approveIdeaId" />
+            <div class="form-group">
+                <label>Комментарий (необязательно)</label>
+                <textarea id="approveComment" placeholder="Например: отличная идея, начнём работу..."></textarea>
+            </div>
+            <button class="btn-approve" style="width:100%;padding:13px;font-size:15px;" onclick="confirmApproveIdea()">Одобрить</button>
+        </div>
+    </div>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const userRole = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName');
+        const userSurname = localStorage.getItem('userSurname');
+        const userId = localStorage.getItem('userId');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!userRole) { window.location.href = 'eduhub-login.html'; return; }
+
+            renderSidebar('moderation');
+
+            loadPending();
+
+            checkPendingDots();
+        });
+
+        function roleLabel(role) {
+            const map = { student: 'Студент', teacher: 'Учитель', moderator: 'Модератор', admin: 'Администратор' };
+            return map[role] || role;
+        }
+
+        let currentTab = 'library';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'library') loadPending();
+            else if (tab === 'announcements') loadPendingAnnouncements();
+            else if (tab === 'ideas') loadPendingIdeas();
+            else {
+                document.getElementById('cardsList').innerHTML =
+                    '<div class="coming-soon">Этот раздел модерации ещё в разработке</div>';
+            }
+        }
+
+        async function loadPending() {
+            const res = await fetch(`${API}/library/pending`);
+            const books = await res.json();
+            const list = document.getElementById('cardsList');
+
+            if (!books.length) {
+                list.innerHTML = '<div class="empty-state">Нет материалов на модерации</div>';
+                return;
+            }
+
+            list.innerHTML = books.map(b => `
+                    <div class="mod-card" id="modcard-${b.id}">
+                      <div class="mod-card-info">
+                        <div class="mod-card-type">${b.documentType || 'Документ'}</div>
+                        <div class="mod-card-title">${b.title}</div>
+                        <div class="mod-card-meta">
+                          <span>Автор: <strong>${b.author}</strong></span>
+                          <span>Предмет: <strong>${b.subject || '—'}</strong></span>
+                          <span>Издательство / Кафедра: <strong>${b.publisher || '—'}</strong></span>
+                          <span>Загрузил: <strong>${b.uploaderName || '—'}</strong></span>
+                          <span>Дата: <strong>${new Date(b.createdAt).toLocaleDateString('ru-RU')}</strong></span>
+                          ${b.description ? `<span style="margin-top:6px;color:#555">${b.description}</span>` : ''}
+                        </div>
+                      </div>
+                      <div class="mod-card-actions">
+                        <button class="btn-approve" id="approve-${b.id}" onclick="approve(${b.id})" disabled style="opacity:0.4;cursor:not-allowed;">Одобрить</button>
+                        <button class="btn-secondary" onclick="downloadAndUnlock(${b.id}, '${b.title}')">Скачать для проверки</button>
+                        <button class="btn-reject" onclick="openRejectModal(${b.id}, 'library')">Отклонить</button>
+                      </div>
+                    </div>
+                  `).join('');
+        }
+
+        async function approve(id) {
+            const res = await fetch(`${API}/library/${id}/approve?moderatorId=${userId}`, { method: 'POST' });
+            if (res.ok) {
+                document.getElementById('modcard-' + id).remove();
+                checkEmpty();
+                checkPendingDots();
+            }
+        }
+
+        async function reject(id) {
+            if (!confirm('Отклонить и удалить этот материал?')) return;
+            const res = await fetch(`${API}/library/${id}/reject`, { method: 'DELETE' });
+            if (res.ok) {
+                document.getElementById('modcard-' + id).remove();
+                checkEmpty();
+            }
+        }
+
+        function checkEmpty() {
+            const list = document.getElementById('cardsList');
+            if (!list.children.length) {
+                list.innerHTML = '<div class="empty-state">Нет материалов на модерации</div>';
+            }
+        }
+
+        async function downloadAndUnlock(id, title) {
+            const res = await fetch(`${API}/library/${id}/download`);
+            if (!res.ok) { showAlert('Ошибка скачивания', 'error'); return; }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const disposition = res.headers.get('Content-Disposition');
+            let fileName = title;
+            if (disposition) {
+                const match = disposition.match(/filename\*=UTF-8''(.+)/);
+                if (match) fileName = decodeURIComponent(match[1]);
+            }
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            const btn = document.getElementById('approve-' + id);
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        }
+
+        async function loadPendingAnnouncements() {
+            const res = await fetch(`${API}/announcements/pending`);
+            const items = await res.json();
+            const list = document.getElementById('cardsList');
+
+            if (!items.length) {
+                list.innerHTML = '<div class="empty-state">Нет объявлений на модерации</div>';
+                return;
+            }
+
+            list.innerHTML = items.map(a => `
+                    <div class="mod-card" id="modcard-${a.id}">
+                        <div class="mod-card-info">
+                            <div class="mod-card-title">${a.title}</div>
+                            <div class="mod-card-meta">
+                                <span>Автор: <strong>${a.authorName || '—'}</strong></span>
+                                <span>Дата: <strong>${new Date(a.createdAt).toLocaleDateString('ru-RU')}</strong></span>
+                                <span style="margin-top:8px;color:#555">${a.body}</span>
+                            </div>
+                        </div>
+                        <div class="mod-card-actions">
+                            <button class="btn-approve" onclick="approveAnn(${a.id})">Одобрить</button>
+                            <button class="btn-reject" onclick="openRejectModal(${a.id}, 'announcement')">Отклонить</button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        async function approveAnn(id) {
+            const res = await fetch(`${API}/announcements/${id}/approve?moderatorId=${userId}`, { method: 'POST' });
+            if (res.ok) {
+                document.getElementById('modcard-' + id).remove();
+                checkEmpty();
+                checkPendingDots();
+            }
+        }
+
+        async function rejectAnn(id) {
+            showConfirm('Отклонить и удалить это объявление?', async () => {
+                const res = await fetch(`${API}/announcements/${id}/reject`, { method: 'DELETE' });
+                if (res.ok) {
+                    document.getElementById('modcard-' + id).remove();
+                    checkEmpty();
+                    showAlert('Объявление отклонено', 'success');
+                } else showAlert('Ошибка', 'error');
+            });
+        }
+        let rejectId = null;
+        let rejectType = null;
+
+        function openRejectModal(id, type) {
+            rejectId = id;
+            rejectType = type;
+            document.getElementById('rejectReason').value = '';
+            document.getElementById('rejectModal').classList.add('open');
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').classList.remove('open');
+            rejectId = null;
+            rejectType = null;
+        }
+
+        async function confirmReject() {
+            const reason = document.getElementById('rejectReason').value.trim();
+            if (!reason) { showAlert('Напишите причину отклонения', 'warning'); return; }
+
+            const url = rejectType === 'library'
+                ? `${API}/library/${rejectId}/reject`
+                : `${API}/announcements/${rejectId}/reject`;
+
+            const res = await fetch(url, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Reason: reason })
+            });
+
+            if (res.ok) {
+                document.getElementById('modcard-' + rejectId).remove();
+                closeRejectModal();
+                checkEmpty();
+            }
+            checkPendingDots();
+        }
+
+        async function checkPendingDots() {
+            const [libRes, annRes, ideasRes] = await Promise.all([
+                fetch(`${API}/library/pending`),
+                fetch(`${API}/announcements/pending`),
+                fetch(`${API}/ideas/pending`)
+            ]);
+
+            const libBooks = await libRes.json();
+            const annItems = await annRes.json();
+            const ideaItems = await ideasRes.json();
+
+            const dotLib = document.getElementById('dot-library');
+            const dotAnn = document.getElementById('dot-announcements');
+            const dotIdeas = document.getElementById('dot-ideas');
+
+            if (dotLib) dotLib.classList.toggle('visible', libBooks.length > 0);
+            if (dotAnn) dotAnn.classList.toggle('visible', annItems.length > 0);
+            if (dotIdeas) dotIdeas.classList.toggle('visible', ideaItems.length > 0);
+
+            if (typeof checkSidebarDot === 'function') checkSidebarDot();
+        }
+
+        async function loadPendingIdeas() {
+            const res = await fetch(`${API}/ideas/pending`);
+            const items = await res.json();
+            const list = document.getElementById('cardsList');
+
+            if (!items.length) {
+                list.innerHTML = '<div class="empty-state">Нет идей на модерации</div>';
+                return;
+            }
+
+            list.innerHTML = items.map(i => `
+                <div class="mod-card" id="modcard-${i.id}">
+                    <div class="mod-card-info">
+                        <div class="mod-card-title">${i.title}</div>
+                        <div class="mod-card-meta">
+                            <span>Автор: <strong>${i.authorName || '—'}</strong></span>
+                            <span>Дата: <strong>${new Date(i.createdAt).toLocaleDateString('ru-RU')}</strong></span>
+                            <span style="margin-top:8px;color:#555">${i.body}</span>
+                        </div>
+                    </div>
+                    <div class="mod-card-actions">
+                        <button class="btn-approve" onclick="openApproveIdeaModal(${i.id})">Одобрить</button>
+                        <button class="btn-reject" onclick="rejectIdea(${i.id})">Отклонить</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function rejectIdea(id) {
+            showConfirm('Отклонить и удалить идею?', async () => {
+                const res = await fetch(`${API}/ideas/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    document.getElementById('modcard-' + id).remove();
+                    checkEmpty();
+                    checkPendingDots();
+                    showAlert('Идея отклонена', 'success');
+                } else showAlert('Ошибка', 'error');
+            });
+        }
+
+        async function openApproveIdeaModal(id) {
+            showConfirm('Опубликовать эту идею?', async () => {
+                const res = await fetch(`${API}/ideas/${id}/approve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ModeratorId: parseInt(userId), Comment: null })
+                });
+                if (res.ok) {
+                    document.getElementById('modcard-' + id)?.remove();
+                    checkEmpty();
+                    checkPendingDots();
+                    showAlert('Идея опубликована', 'success');
+                } else showAlert('Ошибка', 'error');
+            });
+        }
+
+        async function confirmApproveIdea() {
+            const id = document.getElementById('approveIdeaId').value;
+            const comment = document.getElementById('approveComment').value.trim();
+
+            const res = await fetch(`${API}/ideas/${id}/approve`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ModeratorId: parseInt(userId), Comment: comment || null })
+            });
+
+            if (res.ok) {
+                closeModal('approveModal');
+                document.getElementById('modcard-' + id)?.remove();
+                checkEmpty();
+                checkPendingDots();
+            }
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('open');
+        }
+    </script>
+</body>
+</html>

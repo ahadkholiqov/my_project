@@ -1,0 +1,722 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Книга идей</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .btn-add {
+            padding: 10px 20px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+            .btn-add:hover {
+                background: #333;
+            }
+
+        .search-wrap {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+            .search-wrap svg {
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                color: #aaa;
+            }
+
+            .search-wrap input {
+                width: 100%;
+                padding: 10px 14px 10px 38px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 9px;
+                font-size: 14px;
+                outline: none;
+                background: #fff;
+                transition: border-color 0.2s;
+            }
+
+                .search-wrap input:focus {
+                    border-color: #111;
+                }
+
+        .ideas-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .idea-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px 28px;
+            border: 1.5px solid #e8e8e8;
+            transition: box-shadow 0.2s, transform 0.15s;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .idea-card:hover {
+                box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+                transform: translateY(-2px);
+            }
+        .idea-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .idea-card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+            line-height: 1.3;
+        }
+
+        .idea-card-meta {
+            font-size: 12.5px;
+            color: #aaa;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .idea-card-body {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .idea-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 14px;
+        }
+
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.15s;
+        }
+
+            .like-btn:hover {
+                border-color: #111;
+                color: #111;
+            }
+
+            .like-btn.liked {
+                background: #111;
+                color: #fff;
+                border-color: #111;
+            }
+
+            .like-btn svg {
+                width: 15px;
+                height: 15px;
+            }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .tag-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .tag-accepted {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .tag-rejected {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .moderator-comment {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #111;
+            font-size: 13px;
+            color: #444;
+        }
+
+            .moderator-comment strong {
+                display: block;
+                font-size: 11px;
+                color: #aaa;
+                margin-bottom: 4px;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.open {
+                display: flex;
+            }
+
+        .modal {
+            background: #fff;
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            background: none;
+            border: none;
+        }
+
+            .modal-close:hover {
+                color: #111;
+            }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 5px;
+            }
+
+            .form-group input, .form-group textarea {
+                width: 100%;
+                padding: 9px 12px;
+                border: 1.5px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 13px;
+                outline: none;
+                font-family: inherit;
+                transition: border-color 0.2s;
+            }
+
+                .form-group input:focus, .form-group textarea:focus {
+                    border-color: #111;
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 120px;
+            }
+
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            margin-top: 4px;
+        }
+
+            .btn-submit:hover {
+                background: #333;
+            }
+
+        .idea-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit-idea {
+            padding: 6px 14px;
+            background: #fff;
+            color: #111;
+            border: 1.5px solid #111;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-del-idea {
+            padding: 6px 14px;
+            background: #fff;
+            color: #e53935;
+            border: 1.5px solid #e53935;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            .btn-del-idea:hover {
+                background: #fff5f5;
+            }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1.5px solid #e0e0e0;
+            background: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+            .filter-tab:hover {
+                border-color: #111;
+                color: #111;
+            }
+
+            .filter-tab.active {
+                background: #111;
+                color: #fff;
+                border-color: #111;
+            }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar-container"></div>
+
+    <main class="main">
+        <div class="page-header">
+            <div>
+                <div class="page-title">Книга идей</div>
+                <div class="page-subtitle">Предлагайте улучшения и голосуйте за лучшие идеи</div>
+            </div>
+            <button class="btn-add" onclick="openAddModal()">+ Предложить идею</button>
+        </div>
+        <div class="filter-tabs" style="display:flex;gap:8px;margin-bottom:16px;">
+            <button class="filter-tab active" id="ftab-popular" onclick="setSort('popular')">Популярное</button>
+            <button class="filter-tab" id="ftab-new" onclick="setSort('new')">Новое</button>
+            <button class="filter-tab" id="ftab-old" onclick="setSort('old')">Старое</button>
+        </div>
+        <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            <input type="text" id="searchInput" placeholder="Поиск по идеям..." oninput="filterIdeas()" />
+        </div>
+
+        <div class="ideas-list" id="ideasList">
+            <div class="empty-state">Загрузка...</div>
+        </div>
+    </main>
+
+    <!-- ADD MODAL -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('addModal')">×</button>
+            <div class="modal-title">Новая идея</div>
+            <div class="form-group">
+                <label>Заголовок *</label>
+                <input type="text" id="ideaTitle" placeholder="Кратко опишите идею" />
+            </div>
+            <div class="form-group">
+                <label>Описание *</label>
+                <textarea id="ideaBody" placeholder="Подробно расскажите об идее..."></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitIdea()">Отправить на модерацию</button>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('editModal')">×</button>
+            <div class="modal-title">Редактировать идею</div>
+            <input type="hidden" id="editIdeaId" />
+            <div class="form-group">
+                <label>Заголовок *</label>
+                <input type="text" id="editIdeaTitle" />
+            </div>
+            <div class="form-group">
+                <label>Описание *</label>
+                <textarea id="editIdeaBody"></textarea>
+            </div>
+            <button class="btn-submit" onclick="submitEditIdea()">Переотправить на модерацию</button>
+        </div>
+    </div>
+
+    <!-- APPROVE MODAL (для модеров) -->
+    <div class="modal-overlay" id="approveModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('approveModal')">×</button>
+            <div class="modal-title">Одобрить идею</div>
+            <input type="hidden" id="approveIdeaId" />
+            <div class="form-group">
+                <label>Комментарий (необязательно)</label>
+                <textarea id="approveComment" placeholder="Например: отличная идея, начнём работу в следующем семестре..."></textarea>
+            </div>
+            <button class="btn-submit" onclick="confirmApprove()">Одобрить</button>
+        </div>
+    </div>
+
+    <!-- REJECT MODAL -->
+    <div class="modal-overlay" id="rejectModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('rejectModal')">×</button>
+            <div class="modal-title">Причина отклонения</div>
+            <input type="hidden" id="rejectIdeaId" />
+            <div class="form-group">
+                <label>Напишите причину *</label>
+                <textarea id="rejectReason" placeholder="Например: дублирует существующую идею..."></textarea>
+            </div>
+            <button class="btn-submit" style="background:#e53935" onclick="confirmReject()">Отклонить</button>
+        </div>
+    </div>
+    <link rel="stylesheet" href="sidebar.css" />
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const role = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName');
+        const userSurname = localStorage.getItem('userSurname');
+        const userId = parseInt(localStorage.getItem('userId'));
+
+        let allIdeas = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!role) { window.location.href = 'eduhub-login.html'; return; }
+            renderSidebar('ideas');
+            loadIdeas();
+        });
+
+        async function loadIdeas() {
+            const res = await fetch(`${API}/ideas?userId=${userId || ''}`);
+            allIdeas = await res.json();
+            renderIdeas(allIdeas);
+        }
+
+        function renderIdeas(list) {
+            const container = document.getElementById('ideasList');
+            if (!list.length) {
+                container.innerHTML = '<div class="empty-state">Идей пока нет — будьте первым!</div>';
+                return;
+            }
+
+            const isMod = role === 'moderator' || role === 'admin';
+
+            container.innerHTML = list.map(i => {
+                const isPending = i.status === 'new';
+                const isAccepted = i.status === 'accepted';
+                const isRejected = i.status === 'rejected';
+                const isOwn = i.authorId === userId;
+
+                const tag = isPending
+                    ? '<span class="tag tag-pending">На рассмотрении</span>'
+                    : isAccepted
+                        ? '<span class="tag tag-accepted">✓ Одобрено</span>'
+                        : isRejected
+                            ? '<span class="tag tag-rejected">Отклонено</span>'
+                            : '';
+
+                const comment = isAccepted && i.moderatorComment
+                    ? `<div class="moderator-comment"><strong>Комментарий модератора</strong>${i.moderatorComment}</div>`
+                    : '';
+
+                const isAcceptedFinal = i.status === 'accepted';
+                const canDelete = isMod || (isOwn && !isAcceptedFinal);
+                const rejectedActions = isRejected && isOwn
+                    ? `<div class="idea-actions" style="margin-top:12px">
+                            <button class="btn-edit-idea" onclick="openEditModal(${i.id}, '${i.title.replace(/'/g, "\\'")}', '${i.body.replace(/'/g, "\\'")}')">Редактировать</button>
+                            <button class="btn-del-idea" onclick="deleteIdea(${i.id})">Удалить</button>
+                           </div>`
+                    : canDelete && !isRejected
+                        ? `<div class="idea-actions" style="margin-top:12px">
+                                <button class="btn-del-idea" onclick="deleteIdea(${i.id})">Удалить</button>
+                                </div>`
+                        : '';
+
+                const modActions = isMod && (i.status === 'reviewed')
+                    ? `<div class="idea-actions">
+                            <button class="btn-edit-idea" onclick="openApproveModal(${i.id})">✓ Принять идею</button>
+                           </div>`
+                    : '';
+
+                return `
+                  <div class="idea-card" id="idea-${i.id}">
+                    <div class="idea-card-header">
+                      <div>${tag}<div class="idea-card-title" style="margin-top:${tag ? '8px' : '0'}">${i.title}</div></div>
+                      ${modActions}
+                    </div>
+                    <div class="idea-card-meta">
+                      <span>Автор: ${i.authorName || '—'} ${i.authorRole ? '(' + roleLabel(i.authorRole) + ')' : ''}</span>
+                      <span>${new Date(i.createdAt).toLocaleDateString('ru-RU')}</span>
+                      ${isAccepted && i.approvedByName && isMod ? `<span>Одобрил: ${i.approvedByName}</span>` : ''}
+                    </div>
+                    <div class="idea-card-body">${i.body}</div>
+                    ${comment}
+                    ${rejectedActions}
+                    <div class="idea-card-footer">
+                      <button class="like-btn ${i.userLiked ? 'liked' : ''}" id="likeBtn-${i.id}" onclick="toggleLike(${i.id})">
+                        <svg viewBox="0 0 24 24" fill="${i.userLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <span id="votes-${i.id}">${i.votes}</span>
+                      </button>
+                    </div>
+                  </div>
+                `;
+            }).join('');
+        }
+
+        function filterIdeas() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            let filtered = allIdeas.filter(i =>
+                i.title.toLowerCase().includes(search) || i.body.toLowerCase().includes(search)
+            );
+
+            if (currentSort === 'popular') {
+                filtered.sort((a, b) => b.votes - a.votes);
+            } else if (currentSort === 'new') {
+                filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            } else if (currentSort === 'old') {
+                filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            }
+
+            renderIdeas(filtered);
+        }
+
+        async function toggleLike(id) {
+            const res = await fetch(`${API}/ideas/${id}/like?userId=${userId}`, { method: 'POST' });
+            if (!res.ok) return;
+            const data = await res.json();
+            document.getElementById('votes-' + id).textContent = data.votes;
+            const btn = document.getElementById('likeBtn-' + id);
+            if (data.liked) {
+                btn.classList.add('liked');
+                btn.querySelector('svg').setAttribute('fill', 'currentColor');
+            } else {
+                btn.classList.remove('liked');
+                btn.querySelector('svg').setAttribute('fill', 'none');
+            }
+        }
+
+        function openAddModal() { document.getElementById('addModal').classList.add('open'); }
+
+        async function submitIdea() {
+            const title = document.getElementById('ideaTitle').value.trim();
+            const body = document.getElementById('ideaBody').value.trim();
+            if (!title || !body) { showAlert('Заполните все поля', 'warning'); return; }
+
+            const res = await fetch(`${API}/ideas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Title: title, Body: body, UserId: userId })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                closeModal('addModal');
+                document.getElementById('ideaTitle').value = '';
+                document.getElementById('ideaBody').value = '';
+                loadIdeas();
+                showAlert('Идея отправлена на рассмотрение', 'success');
+            } else {
+                showAlert(data.message || 'Ошибка', 'error');
+            }
+        }
+
+        function openEditModal(id, title, body) {
+            document.getElementById('editIdeaId').value = id;
+            document.getElementById('editIdeaTitle').value = title;
+            document.getElementById('editIdeaBody').value = body;
+            document.getElementById('editModal').classList.add('open');
+        }
+
+        async function submitEditIdea() {
+            const id = document.getElementById('editIdeaId').value;
+            const title = document.getElementById('editIdeaTitle').value.trim();
+            const body = document.getElementById('editIdeaBody').value.trim();
+            if (!title || !body) { showAlert('Заполните все поля', 'warning'); return; }
+
+            const res = await fetch(`${API}/ideas/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Title: title, Body: body, UserId: userId })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                closeModal('editModal');
+                loadIdeas();
+                showAlert('Идея обновлена', 'success');
+            } else {
+                showAlert(data.message || 'Ошибка', 'error');
+            }
+        }
+
+        function openApproveModal(id) {
+            document.getElementById('approveIdeaId').value = id;
+            document.getElementById('approveComment').value = '';
+            document.getElementById('approveModal').classList.add('open');
+        }
+
+        async function confirmApprove() {
+            const id = document.getElementById('approveIdeaId').value;
+            const comment = document.getElementById('approveComment').value.trim();
+
+            const res = await fetch(`${API}/ideas/${id}/accept`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ModeratorId: userId, Comment: comment || null })
+            });
+
+            if (res.ok) {
+                closeModal('approveModal');
+                loadIdeas();
+            }
+        }
+
+        function openRejectModal(id) {
+            document.getElementById('rejectIdeaId').value = id;
+            document.getElementById('rejectReason').value = '';
+            document.getElementById('rejectModal').classList.add('open');
+        }
+
+        async function confirmReject() {
+            const id = document.getElementById('rejectIdeaId').value;
+            const reason = document.getElementById('rejectReason').value.trim();
+            if (!reason) { showAlert('Напишите причину', 'warning'); return; }
+
+            const res = await fetch(`${API}/ideas/${id}/reject`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Reason: reason })
+            });
+
+            if (res.ok) {
+                closeModal('rejectModal');
+                loadIdeas();
+            }
+        }
+
+        async function deleteIdea(id) {
+            showConfirm('Удалить идею?', async () => {
+                const res = await fetch(`${API}/ideas/${id}`, { method: 'DELETE' });
+                if (res.ok) { loadIdeas(); showAlert('Идея удалена', 'success'); }
+                else showAlert('Ошибка удаления', 'error');
+            });
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+        let currentSort = 'popular';
+
+        function setSort(sort) {
+            currentSort = sort;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('ftab-' + sort).classList.add('active');
+            filterIdeas();
+        }
+        function roleLabel(r) {
+            const map = { student: 'Студент', teacher: 'Учитель', moderator: 'Модератор', admin: 'Администратор' };
+            return map[r] || r;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,735 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub — Главная</title>
+    <link rel="stylesheet" href="sidebar.css" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main {
+            margin-left: 220px;
+            flex: 1;
+            padding: 36px 40px 80px;
+        }
+
+        .welcome-block {
+            margin-bottom: 28px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .welcome-role {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .dash-card {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .dash-card:hover {
+                box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+            }
+
+            .dash-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+            }
+
+            .dash-card.accent-blue::before {
+                background: #90caf9;
+            }
+
+            .dash-card.accent-green::before {
+                background: #a5d6a7;
+            }
+
+            .dash-card.accent-yellow::before {
+                background: #fff176;
+            }
+
+            .dash-card.accent-orange::before {
+                background: #ffcc80;
+            }
+
+            .dash-card.accent-purple::before {
+                background: #ce93d8;
+            }
+
+            .dash-card.accent-red::before {
+                background: #ef9a9a;
+            }
+
+        .dash-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .icon-blue {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .icon-green {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .icon-yellow {
+            background: #fffde7;
+            color: #f57f17;
+        }
+
+        .icon-orange {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .icon-purple {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .icon-red {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .dash-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .dash-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dash-card-sub {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .dash-card-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        /* Календарь */
+        .calendar-section {
+            margin-top: 32px;
+        }
+
+        .cal-wrap {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .calendar-table {
+            border-collapse: collapse;
+            min-width: 100%;
+        }
+
+            .calendar-table th {
+                font-size: 11px;
+                color: #aaa;
+                font-weight: 600;
+                padding: 4px;
+                text-align: center;
+                border: none;
+                white-space: nowrap;
+            }
+
+            .calendar-table tr th:first-child {
+                width: 28px;
+                min-width: 28px;
+                font-size: 10px;
+                padding: 4px 2px;
+            }
+
+            .calendar-table td {
+                width: 48px;
+                min-width: 48px;
+                height: 48px;
+                text-align: center;
+                vertical-align: middle;
+                border: 1px solid #f0f0f0;
+                cursor: pointer;
+                font-size: 10px;
+                padding: 3px;
+                transition: opacity 0.15s;
+            }
+
+                .calendar-table td:hover {
+                    opacity: 0.75;
+                }
+
+        .cal-date {
+            font-size: 10px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .cal-type {
+            font-size: 9px;
+            color: #666;
+            margin-top: 1px;
+        }
+
+        .cal-empty {
+            background: #fafafa;
+            cursor: default;
+        }
+
+        .cal-sunday {
+            background: #f5f5f5;
+            cursor: default;
+        }
+
+        .cal-holiday {
+            background: #fff8f8;
+            outline: 1.5px solid #e53935;
+        }
+
+            .cal-holiday .cal-date {
+                color: #c62828;
+            }
+
+            .cal-holiday .cal-type {
+                color: #e53935;
+            }
+
+        .cal-cycle-1 {
+            background: #fff59d;
+        }
+
+        .cal-cycle-2 {
+            background: #f8bbd0;
+        }
+
+        .cal-cycle-3 {
+            background: #bbdefb;
+        }
+
+        .cal-cycle-4 {
+            background: #d1c4e9;
+        }
+
+        .cal-cycle-5 {
+            background: #c8e6c9;
+        }
+
+        .cal-blank {
+            background: #fff3e0;
+            border: 1.5px dashed #ffb74d;
+        }
+
+        .cal-today {
+            outline: 2.5px solid #111 !important;
+        }
+
+        .cal-legend {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: #777;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .context-bar {
+            background: #fff;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .context-bar-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .context-subject {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .context-details {
+            font-size: 12px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        .context-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-workday {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-exam {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge-weekend {
+            background: #f5f5f5;
+            color: #aaa;
+        }
+
+        .badge-holiday {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .accent-teal {
+            border-top: 3px solid #00897b;
+        }
+
+        .icon-teal {
+            background: #e0f2f1;
+            color: #00695c;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <main class="main">
+        <div class="welcome-block">
+            <div class="welcome-title" id="welcomeTitle">Добро пожаловать</div>
+            <div class="welcome-role" id="welcomeRole"></div>
+        </div>
+
+        <div class="cards-grid" id="cardsGrid"></div>
+
+        <div id="todaySection"></div>
+
+        <div class="calendar-section" id="calendarSection"></div>
+    </main>
+    <div id="dayInfoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;">
+        <div style="background:#fff;border-radius:14px;padding:32px;width:100%;max-width:420px;position:relative;">
+            <div style="font-size:17px;font-weight:700;color:#111;margin-bottom:4px;" id="dayInfoTitle"></div>
+            <div style="font-size:13px;color:#aaa;margin-bottom:20px;" id="dayInfoCycle"></div>
+            <div id="dayInfoContent"></div>
+            <div style="display:flex;justify-content:flex-end;margin-top:24px;">
+                <button onclick="document.getElementById('dayInfoModal').style.display='none'" style="background:#111;color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:600;cursor:pointer;">Закрыть</button>
+            </div>
+        </div>
+    </div>
+    <script src="sidebar.js"></script>
+    <script>
+        const API = 'http://localhost:5052/api';
+        const userId = parseInt(localStorage.getItem('userId'));
+        const role = localStorage.getItem('userRole');
+        const userName = localStorage.getItem('userName');
+        const userSurname = localStorage.getItem('userSurname');
+
+        const roleLabels = {
+            student: 'Студент', teacher: 'Преподаватель',
+            moderator: 'Модератор', admin: 'Администратор'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!role) { window.location.href = 'eduhub-login.html'; return; }
+            renderSidebar('main');
+            document.getElementById('welcomeTitle').textContent = `Добро пожаловать, ${userName} ${userSurname}`;
+            document.getElementById('welcomeRole').textContent = roleLabels[role] || role;
+            loadDashboard();
+        });
+
+        async function loadDashboard() {
+            const res = await fetch(`${API}/dashboard?userId=${userId}`);
+            if (!res.ok) return;
+            const data = await res.json();
+            renderCards(data);
+            renderToday(data.todayInfo, data.todaySchedule);
+            renderCalendar();
+        }
+
+        function renderCards(data) {
+            const grid = document.getElementById('cardsGrid');
+            let html = '';
+
+            // Последнее объявление
+            if (data.lastAnnouncement) {
+                const date = new Date(data.lastAnnouncement.createdAt).toLocaleDateString('ru-RU');
+                html += `
+                <div class="dash-card accent-blue" onclick="window.location.href='announcements.html'">
+                    <div class="dash-card-icon icon-blue">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="dash-card-label">Последнее объявление</div>
+                    <div class="dash-card-title">${data.lastAnnouncement.title}</div>
+                    <div class="dash-card-sub">${date}</div>
+                </div>`;
+            }
+
+            // Последний файл библиотеки
+            if (data.lastBook) {
+                const date = new Date(data.lastBook.createdAt).toLocaleDateString('ru-RU');
+                html += `
+                <div class="dash-card accent-green" onclick="window.location.href='library.html'">
+                    <div class="dash-card-icon icon-green">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <div class="dash-card-label">Новое в библиотеке</div>
+                    <div class="dash-card-title">${data.lastBook.title}</div>
+                    <div class="dash-card-sub">${data.lastBook.author} · ${date}</div>
+                </div>`;
+            }
+
+            // Файлообменник (для студента)
+            if (data.lastFileExchange) {
+                const date = new Date(data.lastFileExchange.createdAt).toLocaleDateString('ru-RU');
+                html += `
+            <div class="dash-card accent-teal" onclick="window.location.href='files.html'">
+                <div class="dash-card-icon icon-teal">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="dash-card-label">Новое в Файлообменнике</div>
+                <div class="dash-card-title">${data.lastFileExchange.subjectName}</div>
+                <div class="dash-card-sub">${data.lastFileExchange.uploaderName} · ${date}</div>
+            </div>`;
+            }
+
+            // Топ идея
+            if (data.topIdea) {
+                html += `
+                <div class="dash-card accent-yellow" onclick="window.location.href='ideas.html'">
+                    <div class="dash-card-icon icon-yellow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="dash-card-label">Популярная идея</div>
+                    <div class="dash-card-title">${data.topIdea.title}</div>
+                    <div class="dash-card-sub">${data.topIdea.votes} голосов</div>
+                </div>`;
+            }
+
+            // Модерация
+            if (data.moderationStats) {
+                const m = data.moderationStats;
+                const total = m.pendingBooks + m.pendingAnnouncements + m.pendingIdeas;
+                html += `
+                <div class="dash-card accent-orange" onclick="window.location.href='moderation.html'">
+                    <div class="dash-card-icon icon-orange">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="dash-card-label">На модерации</div>
+                    <div class="dash-card-number">${total}</div>
+                    <div class="dash-card-sub">Файлов: ${m.pendingBooks} · Объявлений: ${m.pendingAnnouncements} · Идей: ${m.pendingIdeas}</div>
+                </div>`;
+            }
+
+            // Админ статистика
+            if (data.adminStats) {
+                const a = data.adminStats;
+                html += `
+                <div class="dash-card accent-purple" onclick="window.location.href='admin.html'">
+                    <div class="dash-card-icon icon-purple">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                    </div>
+                    <div class="dash-card-label">Пользователи</div>
+                    <div class="dash-card-number">${a.totalUsers}</div>
+                    <div class="dash-card-sub">Студентов: ${a.totalStudents} · Преподавателей: ${a.totalTeachers}</div>
+                </div>`;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function renderToday(todayInfo, todaySchedule) {
+            const section = document.getElementById('todaySection');
+            if (!todayInfo) {
+                section.innerHTML = `
+                <div class="context-bar">
+                <div style="font-size:14px;color:#888;">Семестр не загружен</div>
+                </div>`;
+                return;
+            }
+
+            const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+            const isWeekend = todayInfo.dayType === 'В';
+            const isHoliday = todayInfo.isHoliday || todayInfo.dayType === 'П';
+            const isSpecial = ['ЧР', 'КИН', 'ИН', 'ЧС'].some(t => todayInfo.dayType?.startsWith(t));
+
+            let cycleLabel = '';
+            if (!isWeekend && !isHoliday) {
+                cycleLabel = `<span style="font-size:12px;color:#888;margin-left:6px;">Цикл ${todayInfo.cycleNumber}</span>`;
+            }
+
+            let dayLabel = '';
+            if (isHoliday) dayLabel = 'Праздник';
+            else if (isWeekend) dayLabel = 'Выходной';
+            else if (isSpecial) dayLabel = todayInfo.dayType;
+            else if (todayInfo.dayType?.startsWith('ЧР')) dayLabel = 'Рубежный контроль';
+            else if (todayInfo.dayType?.startsWith('КИН')) dayLabel = 'Консультация';
+            else if (todayInfo.dayType?.startsWith('ИН')) dayLabel = 'Экзамен';
+            else if (todayInfo.dayType?.startsWith('ЧС')) dayLabel = 'Ҷамбасти Сикл';
+            else dayLabel = `День ${todayInfo.dayType}`;
+
+            let badgeClass = isHoliday ? 'badge-holiday' : isWeekend ? 'badge-weekend' : isSpecial ? 'badge-exam' : 'badge-workday';
+
+            const role = localStorage.getItem('userRole');
+            const noLessonsLabel = (!todaySchedule || !todaySchedule.length) && !isWeekend && !isHoliday && !isSpecial
+                ? (role === 'teacher' ? 'Сегодня нет занятий' : 'Расписание не найдено')
+                : null;
+
+            section.innerHTML = todaySchedule && todaySchedule.length > 0
+                ? todaySchedule.map(s => `
+        <div class="context-bar" style="flex-direction:row;align-items:center;">
+            <div style="flex:1;">
+                <div class="context-subject">${s.subjectName}</div>
+                <div class="context-details">
+                    ${[s.teacherName, s.groupName, s.building && s.roomNumber ? s.building + ' ' + s.roomNumber : '', s.startTime].filter(Boolean).join(' · ')}
+                </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+                <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:4px;">${dateStr}</div>
+                <span class="context-badge badge-workday">День ${s.lessonNumber} · Цикл ${todayInfo.cycleNumber}</span>
+            </div>
+        </div>`).join('')
+                : `<div class="context-bar" style="flex-direction:row;align-items:center;">
+                        <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:700;color:#111;">${dateStr}</div>
+                        ${noLessonsLabel ? `<div style="font-size:13px;color:#aaa;margin-top:6px;">${noLessonsLabel}</div>` : ''}
+                        </div>
+                    <div style="text-align:right;flex-shrink:0;">
+                    <span class="context-badge ${badgeClass}">${isWeekend ? 'Выходной' : isHoliday ? 'Праздник' : dayLabel}</span>
+                </div>
+                </div>`;
+        }
+
+        async function renderCalendar() {
+            const res = await fetch(`${API}/admin/semester/public`);
+            if (!res.ok) {
+                document.getElementById('calendarSection').innerHTML = '';
+                return;
+            }
+            const data = await res.json();
+
+            const cycleColors = {
+                1: 'cal-cycle-1', 2: 'cal-cycle-2',
+                3: 'cal-cycle-3', 4: 'cal-cycle-4', 5: 'cal-cycle-5'
+            };
+
+            const dayMap = {};
+            (data.Days || data.days || []).forEach(d => {
+                dayMap[d.date || d.Date] = d;
+            });
+
+            const start = new Date(data.startDate || data.StartDate);
+            const end = new Date(data.endDate || data.EndDate);
+            const todayStr = new Date().toISOString().split('T')[0];
+
+            let cur = new Date(start);
+            while (cur.getDay() !== 1) cur.setDate(cur.getDate() - 1);
+
+            const weeks = [];
+            while (cur <= end) {
+                const week = [];
+                for (let i = 0; i < 6; i++) {
+                    week.push(new Date(cur));
+                    cur.setDate(cur.getDate() + 1);
+                }
+                cur.setDate(cur.getDate() + 1);
+                weeks.push(week);
+            }
+
+            const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+
+            let html = `
+            <div class="section-title">Календарь семестра</div>
+            <div class="cal-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#fff59d;border:1px solid #e0e0e0;"></div>Цикл 1</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#f8bbd0;border:1px solid #e0e0e0;"></div>Цикл 2</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#bbdefb;border:1px solid #e0e0e0;"></div>Цикл 3</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#d1c4e9;border:1px solid #e0e0e0;"></div>Цикл 4</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#c8e6c9;border:1px solid #e0e0e0;"></div>Цикл 5</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#fff8f8;border:1.5px solid #e53935;"></div>Праздник</div>
+            </div>
+            <div class="cal-wrap">
+            <table class="calendar-table">
+                <thead><tr><th></th>${weeks.map((_, i) => `<th>${i + 1}<br><span style="font-weight:400;">нед.</span></th>`).join('')}</tr></thead>
+                <tbody>`;
+
+            for (let dayIdx = 0; dayIdx < 6; dayIdx++) {
+                html += `<tr><th>${dayNames[dayIdx]}</th>`;
+                weeks.forEach(week => {
+                    const date = week[dayIdx];
+                    const dateStr = date.toISOString().split('T')[0];
+                    const d = dayMap[dateStr];
+
+                    if (!d) { html += `<td class="cal-empty"></td>`; return; }
+
+                    let cls = '';
+                    let typeLabel = '';
+
+                    if (d.isHoliday || d.dayType === 'П') {
+                        cls = 'cal-holiday'; typeLabel = 'Праздник';
+                    } else if (d.dayType === 'В') {
+                        cls = 'cal-sunday'; typeLabel = 'Вых.';
+                    } else if (d.dayType === '') {
+                        cls = 'cal-blank'; typeLabel = '?';
+                    } else {
+                        cls = cycleColors[d.cycleNumber] || '';
+                        let raw = d.dayType.replace(' (Суб)', '').replace(' (Доп)', '');
+                        typeLabel = /^\d+$/.test(raw) ? `День ${raw}` : raw;
+                    }
+
+                    if (dateStr === todayStr) cls += ' cal-today';
+
+                    const dateLabel = `${date.getDate()}.${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    const clickable = d.dayType !== 'В' && d.dayType !== 'П';
+
+                    html += `<td class="${cls}" ${clickable ? `onclick="openDayInfo('${dateStr}', '${d.dayType}', ${d.cycleNumber || 'null'})"` : ''}>
+                        <div class="cal-date">${dateLabel}</div>
+                        <div class="cal-type">${typeLabel}</div>
+                    </td>`;
+                });
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table></div>`;
+            document.getElementById('calendarSection').innerHTML = html;
+        }
+
+        async function openDayInfo(date, dayType, cycleNumber) {
+            const specialTypes = ['ЧР', 'КИН', 'ИН', 'ЧС', 'В', 'П'];
+            const dateFormatted = new Date(date).toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+            const typeClean = dayType.replace(' (Суб)', '').replace(' (Доп)', '');
+            const typeDisplay = /^\d+$/.test(typeClean) ? `День ${typeClean}` : typeClean;
+            const isSpecial = specialTypes.some(t => typeClean.startsWith(t));
+
+            document.getElementById('dayInfoTitle').textContent = dateFormatted;
+            const badgeClass = isSpecial
+                ? (typeClean.startsWith('ЧР') ? 'badge-exam' : typeClean.startsWith('ИН') ? 'badge-holiday' : typeClean.startsWith('КИН') ? 'badge-exam' : 'badge-weekend')
+                : 'badge-workday';
+            const badgeText = cycleNumber ? `Цикл ${cycleNumber} · ${typeDisplay}` : typeDisplay;
+            document.getElementById('dayInfoCycle').innerHTML = `<span class="context-badge ${badgeClass}">${badgeText}</span>`;
+            document.getElementById('dayInfoContent').innerHTML = `<div style="text-align:center;color:#aaa;font-size:13px;">Загрузка...</div>`;
+            document.getElementById('dayInfoModal').style.display = 'flex';
+
+            if (!cycleNumber || typeClean.startsWith('В') || typeClean.startsWith('П') || typeClean.startsWith('ЧС')) {
+                const labels = { 'В': 'Выходной день', 'П': 'Праздник', 'ЧС': 'Ҷамбасти Сикл' };
+                const label = Object.entries(labels).find(([k]) => typeClean.startsWith(k))?.[1] || typeDisplay;
+                document.getElementById('dayInfoContent').innerHTML = `
+                <div style="background:#f9f9f9;border-radius:10px;padding:20px;font-size:14px;color:#888;text-align:center;">${label}</div>`;
+                return;
+            }
+
+            const res = await fetch(`${API}/dashboard/day-info?userId=${userId}&date=${date}&cycleNumber=${cycleNumber}&dayType=${encodeURIComponent(typeClean)}`);
+            if (!res.ok) {
+                document.getElementById('dayInfoContent').innerHTML = `<div style="text-align:center;color:#aaa;">Ошибка загрузки</div>`;
+                return;
+            }
+            const data = await res.json();
+
+            if (!data.subjects || !data.subjects.length) {
+                document.getElementById('dayInfoContent').innerHTML = `
+            <div style="background:#f9f9f9;border-radius:10px;padding:20px;font-size:14px;color:#aaa;text-align:center;">
+                Занятий нет
+            </div>`;
+                return;
+            }
+
+            const isExam = typeClean.startsWith('ИН');
+            document.getElementById('dayInfoContent').innerHTML = data.subjects.map(s => `
+    <div style="background:#f9f9f9;border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;">
+        ${!isExam ? `<div style="background:#111;color:#fff;border-radius:8px;padding:5px 12px;font-size:14px;font-weight:700;white-space:nowrap;">${s.startTime}</div>` : ''}
+        <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#111;">${s.subjectName}</div>
+            ${!isExam ? `<div style="font-size:12px;color:#888;margin-top:3px;">${[s.teacherName, s.groupName, s.building && s.roomNumber ? s.building + ' ' + s.roomNumber : ''].filter(Boolean).join(' · ')}</div>` : ''}
+        </div>
+    </div>
+`).join('');
+        }
+    </script>
+</body>
+</html>
